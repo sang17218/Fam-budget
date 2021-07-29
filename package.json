@@ -1,0 +1,22 @@
+{
+  "name": "fam-budget",
+  "version": "1.0.0",
+  "description": "Fam-budget",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sang17218/Fam-budget.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sang17218/Fam-budget/issues"
+  },
+  "homepage": "https://github.com/sang17218/Fam-budget#readme",
+  "dependencies": {
+    "sequelize": "^6.6.5"
+  }
+}
