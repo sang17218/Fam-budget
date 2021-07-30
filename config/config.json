@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "ashwin1234",
+    "database": "FamilyBudget",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "ashwin1234",
+    "database": "AccountHolder",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "ashwin1234",
+    "database": "AccountHolder",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

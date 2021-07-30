@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/sang17218/Fam-budget#readme",
   "dependencies": {
-    "sequelize": "^6.6.5"
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
   }
 }
