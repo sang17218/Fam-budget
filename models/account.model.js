@@ -48,3 +48,6 @@ const Account = sequelize.define('Account', {
   },
 })
 Account.belongsTo(AccountHolder);
+Account.belongsToMany(SecondaryAccountHolder);
+Account.belongsToMany(Card);
+Account.belongsToMany(Transaction);
