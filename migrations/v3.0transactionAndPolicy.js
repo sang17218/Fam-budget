@@ -7,7 +7,7 @@ module.exports = {
             await queryInterface.sequelize.query(`CREATE TABLE IF NOT EXISTS Transaction(
               transactionID VARCHAR(255) NOT NULL,
               accountNumber BIGINT(8) NOT NULL,
-              merchant VARCHAR(255) NOT NULL,
+              merchant VARCHAR(255),
               description VARCHAR(255) NOT NULL,
               amount FLOAT NOT NULL,
               senderSecondary TINYINT(1) NOT NULL DEFAULT false,

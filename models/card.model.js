@@ -46,6 +46,10 @@ const Card = sequelize.define('Card', {
     secondaryId: {
         type: DataTypes.BIGINT,
     }
+},
+{
+    tableName: 'Card',
+    timestamps: false
 })
 Card.hasOne(Account, { foreignKey: 'accountNumber' })
 Card.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})

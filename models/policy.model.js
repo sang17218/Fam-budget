@@ -55,6 +55,9 @@ const Policy = sequelize.define('Policy', {
         allowNull: false,
         defaultValue: false
     }
+},{
+    tableName: "Policy",
+    timestamps: false
 })
 
 Policy.hasOne(Account, { foreignKey: 'accountNumber' })

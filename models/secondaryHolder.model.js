@@ -98,7 +98,8 @@ const sequelize = new Sequelize({
     },
 
 }, {
-    tableName: 'SecondaryAccountHolder'
+    tableName: 'SecondaryAccountHolder',
+    timestamps: false
 });
 
 SecondaryAccountHolder.hasOne(Account, { foreignKey: 'accountNumber' })
