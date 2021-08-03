@@ -1,15 +1,28 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize();
+const {AccountHolder} = require('../models/accountHolder.model')
+// const {SecondaryAccountHolder} = require('../models/secondaryHolder.model')
+// const {Card} = require('../models/card.model')
+// const {Transaction} = require('../models/transaction.model')
+
+const sequelize = new Sequelize({
+  "username": "root",
+  "password": "Itsasecret2@",
+  "database": "FamilyBudget",
+  "host": "127.0.0.1",
+  "dialect": "mysql",
+  "port": 3306
+});
 
 const Account = sequelize.define('Account', {
   
   accountNumber: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
-    validate: {
-        len: [8, 10]
-      }
+    autoIncrement: true 
+    // validate: {
+    //     len: [8, 10]
+    //   }
   },
   branch: {
     type: DataTypes.STRING(255),
@@ -28,7 +41,7 @@ const Account = sequelize.define('Account', {
     allowNull: false,
     defaultValue:0.00
   },
-  city: {
+  bcity: {
     type: DataTypes.STRING(255),
     allowNull: false
   },
@@ -47,7 +60,9 @@ const Account = sequelize.define('Account', {
     allowNull: true,
   },
 })
-Account.belongsTo(AccountHolder);
-Account.belongsToMany(SecondaryAccountHolder);
-Account.belongsToMany(Card);
-Account.belongsToMany(Transaction);
+
+// Account.belongsToMany(SecondaryAccountHolder, {foreignKey: 'secondaryId'});
+// Account.belongsToMany(Card, {foreignKey: 'cardNumber'});
+// Account.belongsToMany(Transaction, {foreignKey: 'transactionID'});
+
+module.exports.Account =  Account

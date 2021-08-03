@@ -1,16 +1,24 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize();
+const {Account} = require('../models/account.model')
+const sequelize = new Sequelize({
+  "username": "root",
+  "password": "Itsasecret2@",
+  "database": "FamilyBudget",
+  "host": "127.0.0.1",
+  "dialect": "mysql",
+  "port": 3306
+});
 
-const AccountHolder = sequelize.define('AccountHolder', {
+ const AccountHolder = sequelize.define('AccountHolder', {
   // Model attributes are defined here
 
   customerId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true 
   },
   accountNumber: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
   },
   firstName: {
     type: DataTypes.STRING(255),
@@ -26,11 +34,10 @@ const AccountHolder = sequelize.define('AccountHolder', {
     // allowNull defaults to true
   },
   mobile: {
-    type: DataTypes.INTEGER(20),
+    type: DataTypes.STRING,
     allowNull: false,
-    validate:{
-        min: 10,
-        max: 15
+    validate: {
+      len: [9, 11]
     }
   },
   gender: {
@@ -46,7 +53,7 @@ const AccountHolder = sequelize.define('AccountHolder', {
     allowNull: false
   },
   panNumber: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
 
   },
@@ -62,11 +69,16 @@ const AccountHolder = sequelize.define('AccountHolder', {
   },
   updatedAt: {
     type: DataTypes.DATE,
-    allowNull: false
   },
  
 }, {
-    tableName: 'AccountHolder'
+    tableName: 'AccountHolder',
+    timestamps: false
 });
+
+// Account.belongsTo(AccountHolder);
 AccountHolder.hasMany(Account, { foreignKey: 'accountNumber' });
+
+// AccountHolder.hasMany(Account)
+module.exports.AccountHolder = AccountHolder
 

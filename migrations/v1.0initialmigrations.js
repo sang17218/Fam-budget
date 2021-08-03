@@ -2,32 +2,32 @@ module.exports = {
     up: async(queryInterface, Sequelize) => {
         return Promise.all([
             await queryInterface.sequelize.query(`CREATE TABLE IF NOT EXISTS Account (
-              accountNumber INTEGER auto_increment NOT NULL,
+              accountNumber BIGINT(8) auto_increment NOT NULL,
               branch VARCHAR(255) NOT NULL,
-              balance VARCHAR(255) NOT NULL,
+              balance FLOAT NOT NULL,
               accountType VARCHAR(255) NOT NULL,
               minimumBalance FLOAT NOT NULL,
-              city VARCHAR(255) NOT NULL,
-              is_active TINYINT(1) NOT NULL DEFAULT false,
-              created_at DATETIME NOT NULL,
-              updated_at DATETIME,
+              bcity VARCHAR(255) NOT NULL,
+              isActive TINYINT(1) NOT NULL DEFAULT false,
+              createdAt DATETIME NOT NULL,
+              updatedAt DATETIME,
               CONSTRAINT PK_Account PRIMARY KEY (accountNumber)
           )`),
             await queryInterface.sequelize.query(`
             CREATE TABLE IF NOT EXISTS AccountHolder (
-              customerId INTEGER auto_increment NOT NULL,
-              accountNumber INTEGER ,
-              panNumber INTEGER NOT NULL,
+              customerId BIGINT(8) auto_increment NOT NULL,
+              accountNumber BIGINT(8),
+              panNumber VARCHAR(255) NOT NULL,
               firstName VARCHAR(255) NOT NULL,
               lastName VARCHAR(255) NOT NULL,
               email VARCHAR(320) NOT NULL,
-              mobile INTEGER NOT NULL,
+              mobile VARCHAR(255) NOT NULL,
               gender ENUM('Male', 'Female','Other') NOT NULL,
-              is_kycVerified TINYINT(1) NOT NULL DEFAULT false,
+              isKycVerified TINYINT(1) NOT NULL DEFAULT false,
               bcity VARCHAR(255) NOT NULL,
-              is_active TINYINT(1) NOT NULL DEFAULT false,
-              created_at DATETIME NOT NULL,
-              updated_at DATETIME,
+              isActive TINYINT(1) NOT NULL DEFAULT false,
+              createdAt DATETIME NOT NULL,
+              updatedAt DATETIME,
               CONSTRAINT PK_AccountHolder PRIMARY KEY (customerId),
               CONSTRAINT FK_AccountHolder FOREIGN KEY (accountNumber) REFERENCES Account(accountNumber)
           )`)

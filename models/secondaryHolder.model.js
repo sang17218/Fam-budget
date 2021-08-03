@@ -1,7 +1,17 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize();
+const {Card} = require('../models/card.model')
+const {Transaction} = require('../models/transaction.model')
+const {Account} = require("./account.model")
+const sequelize = new Sequelize({
+    "username": "root",
+    "password": "Itsasecret2@",
+    "database": "FamilyBudget",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 3306
+  });
 
-const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
+ const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
     // Model attributes are defined here
 
     //   customerId: {
@@ -10,16 +20,16 @@ const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
     //     autoIncrement: true 
     //   },
     secondaryId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
         validate: {
-            len: [1, 2]
+            len: [9, 11]
         },
         primaryKey: true,
         // autoIncrement: true 
     },
     accountNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false
     },
     firstName: {
@@ -36,11 +46,10 @@ const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
         // allowNull defaults to true
     },
     mobile: {
-        type: DataTypes.INTEGER(20),
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            min: 10,
-            max: 15
+            len: [9,11]
         }
     },
     gender: {
@@ -60,7 +69,7 @@ const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
         allowNull: false
     },
     panNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
 
     },
@@ -93,5 +102,7 @@ const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
 });
 
 SecondaryAccountHolder.hasOne(Account, { foreignKey: 'accountNumber' })
-SecondaryAccountHolder.belongsToMany(Transaction, {foreignKey: 'transactionID'})
-SecondaryAccountHolder.belongsToMany(Card, {foreignKey: 'cardNumber' })
+// SecondaryAccountHolder.belongsToMany(Transaction, {foreignKey: 'transactionID'})
+// SecondaryAccountHolder.belongsToMany(Card, {foreignKey: 'cardNumber' })
+
+module.exports.SecondaryAccountHolder = SecondaryAccountHolder

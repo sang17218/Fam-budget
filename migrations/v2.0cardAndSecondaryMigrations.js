@@ -2,28 +2,28 @@ module.exports = {
     up: async(queryInterface, Sequelize) => {
         return Promise.all([
             await queryInterface.sequelize.query(`CREATE TABLE IF NOT EXISTS SecondaryAccountHolder(
-              accountNumber INTEGER NOT NULL,
-              secondaryId INTEGER NOT NULL,
-              panNumber INTEGER NOT NULL,
+              accountNumber BIGINT(8) NOT NULL,
+              secondaryId BIGINT(8) auto_increment NOT NULL,
+              panNumber VARCHAR(255) NOT NULL,
               firstName VARCHAR(255) NOT NULL,
               lastName VARCHAR(255) NOT NULL,
               email VARCHAR(320) NOT NULL,
               relationship VARCHAR(320) NOT NULL,
-              mobile INTEGER NOT NULL,
+              mobile  VARCHAR(255) NOT NULL,
               gender ENUM('Male', 'Female','Other') NOT NULL,
-              is_kycVerified TINYINT(1) NOT NULL DEFAULT false,
+              isKycVerified TINYINT(1) NOT NULL DEFAULT false,
               bcity VARCHAR(255) NOT NULL,
               isMinor TINYINT(1) NOT NULL DEFAULT false,
               isActive TINYINT(1) NOT NULL DEFAULT false,
-              created_at DATETIME NOT NULL,
-              updated_at DATETIME,
+              createdAt DATETIME NOT NULL,
+              updatedAt DATETIME,
               CONSTRAINT PK_SecondaryAccountHolder PRIMARY KEY (secondaryId),
               CONSTRAINT FK_Account_SAH FOREIGN KEY (accountNumber) REFERENCES Account(accountNumber)
           )`),
             await queryInterface.sequelize.query(`
             CREATE TABLE IF NOT EXISTS Card (
               cardNumber VARCHAR(255) NOT NULL,
-              accountNumber INTEGER NOT NULL,
+              accountNumber BIGINT(8) NOT NULL,
               type VARCHAR(255) NOT NULL,
               cvv INTEGER NOT NULL,
               expiryPeriod DATETIME NOT NULL,

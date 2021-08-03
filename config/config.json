@@ -4,20 +4,23 @@
     "password": "Itsasecret2@",
     "database": "FamilyBudget",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   },
   "test": {
     "username": "root",
     "password": "Itsasecret2@",
-    "database": "AccountHolder",
+    "database": "FamilyBudget",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   },
   "production": {
     "username": "root",
     "password": "Itsasecret2@",
-    "database": "AccountHolder",
+    "database": "FamilyBudget",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   }
 }

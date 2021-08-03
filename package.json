@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/sang17218/Fam-budget#readme",
   "dependencies": {
+    "aws-sdk": "^2.958.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.5",
     "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.0.0"
   }
 }

@@ -1,15 +1,24 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize();
+const { Sequelize, DataTypes, Model } = require('sequelize');
+const {Account} = require("./account.model")
+const {SecondaryAccountHolder} = require("./secondaryHolder.model")
+const sequelize = new Sequelize({
+  "username": "root",
+  "password": "Itsasecret2@",
+  "database": "FamilyBudget",
+  "host": "127.0.0.1",
+  "dialect": "mysql",
+  "port": 3306
+});
 
 const Transaction = sequelize.define('Transaction', {
   
   transactionID: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
-    validate: {
-        len: [10, 12]
-      }
+    // validate: {
+    //     len: [10, 12]
+    //   }
   },
   merchant: {
     type: DataTypes.STRING(255),
@@ -27,7 +36,7 @@ const Transaction = sequelize.define('Transaction', {
     allowNull: false,
   },
   secondaryId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
   },
   transactionStartedAt: {
     type: DataTypes.DATE,
@@ -52,4 +61,6 @@ const Transaction = sequelize.define('Transaction', {
 })
 
 Transaction.hasMany(Account, {foreignKey:  'accountNumber' })
-Transaction.hasOne('SecondaryAccountHolder', {foreignKey: secondaryId})
+Transaction.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
+
+module.exports.Transaction = Transaction

@@ -1,8 +1,16 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize();
+const {Account} = require('../models/account.model')
+const {SecondaryAccountHolder} = require("../models/secondaryHolder.model")
+const sequelize = new Sequelize({
+    "username": "root",
+    "password": "Itsasecret2@",
+    "database": "FamilyBudget",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 3306
+  });
 
 const Policy = sequelize.define('Policy', {
-
     policyId: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -12,7 +20,7 @@ const Policy = sequelize.define('Policy', {
         primaryKey: true,
     },
     accountNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
     },
     spendLimit: {
@@ -25,7 +33,7 @@ const Policy = sequelize.define('Policy', {
         defaultValue: false
     },
     secondaryId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -50,4 +58,6 @@ const Policy = sequelize.define('Policy', {
 })
 
 Policy.hasOne(Account, { foreignKey: 'accountNumber' })
-Policy.hasOne('SecondaryAccountHolder', {foreignKey: secondaryId})
+Policy.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
+
+module.exports.Policy = Policy
