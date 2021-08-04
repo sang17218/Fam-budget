@@ -53,6 +53,20 @@ functions:
          path: /auth/signup
          method: post
          cors: true
+  createTransaction:
+    handler: src/api/auth/createTransaction.createTransaction
+    events:
+      - http:
+          path: /transaction/createTransaction
+          method: post
+          cors: true
+  getTransaction:
+    handler: src/api/auth/getTransaction.getTransaction
+    events:
+      - http:
+          path: /transaction/getTransaction
+          method: post
+          cors: true
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

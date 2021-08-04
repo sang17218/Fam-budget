@@ -4,7 +4,8 @@
   "description": "Fam-budget",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sls offline -s offline"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
     "aws-sdk": "^2.958.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "serverless": "^2.52.1"
   },
   "devDependencies": {
     "serverless-offline": "^8.0.0"

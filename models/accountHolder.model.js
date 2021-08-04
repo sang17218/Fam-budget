@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const {Account} = require('../models/account.model')
 const sequelize = new Sequelize({
   "username": "root",
-  "password": "Itsasecret2@",
+  "password": "ashwin1234",
   "database": "FamilyBudget",
   "host": "127.0.0.1",
   "dialect": "mysql",

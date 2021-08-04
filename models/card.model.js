@@ -3,7 +3,7 @@ const {Account} = require('../models/account.model')
 const {SecondaryAccountHolder} = require('../models/secondaryHolder.model')
 const sequelize = new Sequelize({
     "username": "root",
-    "password": "Itsasecret2@",
+    "password": "ashwin1234",
     "database": "FamilyBudget",
     "host": "127.0.0.1",
     "dialect": "mysql",
@@ -46,8 +46,11 @@ const Card = sequelize.define('Card', {
     secondaryId: {
         type: DataTypes.BIGINT,
     }
+},{
+    tableName: 'Card',
+    timestamps: false
 })
 Card.hasOne(Account, { foreignKey: 'accountNumber' })
-Card.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
+//Card.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
 
 module.exports.Card = Card

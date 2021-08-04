@@ -3,7 +3,7 @@ const {Account} = require('../models/account.model')
 const {SecondaryAccountHolder} = require("../models/secondaryHolder.model")
 const sequelize = new Sequelize({
     "username": "root",
-    "password": "Itsasecret2@",
+    "password": "ashwin1234",
     "database": "FamilyBudget",
     "host": "127.0.0.1",
     "dialect": "mysql",
@@ -55,6 +55,9 @@ const Policy = sequelize.define('Policy', {
         allowNull: false,
         defaultValue: false
     }
+},{
+    tableName: 'Policy',
+    timestamps: false
 })
 
 Policy.hasOne(Account, { foreignKey: 'accountNumber' })

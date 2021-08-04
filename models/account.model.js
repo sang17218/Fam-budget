@@ -6,7 +6,7 @@ const {AccountHolder} = require('../models/accountHolder.model')
 
 const sequelize = new Sequelize({
   "username": "root",
-  "password": "Itsasecret2@",
+  "password": "ashwin1234",
   "database": "FamilyBudget",
   "host": "127.0.0.1",
   "dialect": "mysql",
@@ -36,7 +36,7 @@ const Account = sequelize.define('Account', {
   accountType: {
     type: DataTypes.STRING(255)
   },
-  mininmumBalance: {
+  minimumBalance: {
     type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue:0.00
@@ -59,6 +59,9 @@ const Account = sequelize.define('Account', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+},{
+  tableName: 'Account',
+  timestamps: false
 })
 
 // Account.belongsToMany(SecondaryAccountHolder, {foreignKey: 'secondaryId'});
