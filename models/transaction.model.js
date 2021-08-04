@@ -22,7 +22,7 @@ const Transaction = sequelize.define('Transaction', {
   },
   merchant: {
     type: DataTypes.STRING(255),
-    allowNull:false
+    allowNull:true
   },
   description: {
     type: DataTypes.STRING(255),
@@ -59,7 +59,8 @@ const Transaction = sequelize.define('Transaction', {
     allowNull: false
   },
 },{
-  tableName: 'Transaction',
+  tableName: "Transaction",
+  timestamps: false
 })
 
 Transaction.hasMany(Account, {foreignKey:  'accountNumber' })

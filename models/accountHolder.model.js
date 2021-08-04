@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const {Account} = require('../models/account.model')
+// const {Account} = require('../models/account.model')
 const sequelize = new Sequelize({
   "username": "root",
   "password": "ashwin1234",
@@ -77,7 +77,7 @@ const sequelize = new Sequelize({
 });
 
 // Account.belongsTo(AccountHolder);
-AccountHolder.hasMany(Account, { foreignKey: 'accountNumber' });
+// AccountHolder.belongsToMany(Account, {foreignKey: "accountNumber"})
 
 // AccountHolder.hasMany(Account)
 module.exports.AccountHolder = AccountHolder

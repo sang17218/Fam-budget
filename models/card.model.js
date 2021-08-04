@@ -46,7 +46,8 @@ const Card = sequelize.define('Card', {
     secondaryId: {
         type: DataTypes.BIGINT,
     }
-},{
+},
+{
     tableName: 'Card',
     timestamps: false
 })

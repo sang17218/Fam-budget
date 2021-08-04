@@ -67,6 +67,20 @@ functions:
           path: /transaction/getTransaction
           method: post
           cors: true
+  create_account:
+    handler: src/api/account/account.create.createAccount
+    events:         
+     - http:
+         path: /account/create
+         method: post
+         cors: true         
+  modify_kyc:
+    handler: src/api/accountHolder/updateKyc.updateKyc
+    events:         
+     - http:
+         path: /accountHolder/updateKyc
+         method: post
+         cors: true 
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

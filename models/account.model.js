@@ -19,10 +19,10 @@ const Account = sequelize.define('Account', {
     type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true 
-    // validate: {
-    //     len: [8, 10]
-    //   }
+    autoIncrement: true ,
+    validate: {
+        len: [9,11],
+      }
   },
   branch: {
     type: DataTypes.STRING(255),
@@ -59,11 +59,16 @@ const Account = sequelize.define('Account', {
     type: DataTypes.DATE,
     allowNull: true,
   },
-},{
+  customerId: {
+    type: DataTypes.BIGINT,
+  }
+},
+{
   tableName: 'Account',
   timestamps: false
 })
 
+Account.hasOne(AccountHolder, {foreignKey: "customerId"})
 // Account.belongsToMany(SecondaryAccountHolder, {foreignKey: 'secondaryId'});
 // Account.belongsToMany(Card, {foreignKey: 'cardNumber'});
 // Account.belongsToMany(Transaction, {foreignKey: 'transactionID'});
