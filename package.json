@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sang17218/Fam-budget#readme",
   "dependencies": {
+    "amazon-cognito-identity-js": "^5.0.6",
     "aws-sdk": "^2.958.0",
     "mysql2": "^2.2.5",
     "random-number": "0.0.9",

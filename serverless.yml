@@ -67,6 +67,34 @@ functions:
          path: /accountHolder/updateKyc
          method: post
          cors: true 
+  login:
+    handler: src/api/auth/login.login
+    events:         
+     - http:
+         path: /auth/login
+         method: post
+         cors: true 
+  forgot_password:
+    handler: src/api/auth/forgotPassword.forgotPassword
+    events:         
+     - http:
+         path: /auth/forgotPassword
+         method: post
+         cors: true 
+  confirm_password:
+    handler: src/api/auth/confirmPassword.confirmPassword
+    events:         
+     - http:
+         path: /auth/confirmPassword
+         method: post
+         cors: true 
+  reset_temporary_password:
+    handler: src/api/auth/resetTemporaryPass.resetTemporaryPassword
+    events:         
+     - http:
+         path: /auth/resetTemporaryPassword
+         method: post
+         cors: true          
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
