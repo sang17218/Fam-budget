@@ -3,7 +3,7 @@ const {Account} = require("./account.model")
 const {SecondaryAccountHolder} = require("./secondaryHolder.model")
 const sequelize = new Sequelize({
   "username": "root",
-  "password": "Itsasecret2@",
+  "password": "ashwin1234",
   "database": "FamilyBudget",
   "host": "127.0.0.1",
   "dialect": "mysql",
@@ -64,6 +64,6 @@ const Transaction = sequelize.define('Transaction', {
 })
 
 Transaction.hasMany(Account, {foreignKey:  'accountNumber' })
-Transaction.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
+//Transaction.hasOne(SecondaryAccountHolder, {foreignKey: 'secondaryId'})
 
 module.exports.Transaction = Transaction
