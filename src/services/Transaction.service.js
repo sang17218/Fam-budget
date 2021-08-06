@@ -1,8 +1,10 @@
 const { AuthUtil } = require("../utils/auth.util")
 const {AccountHolder} = require("../../models/accountHolder.model")
+const uuid  = require("uuid").v4
 
 const {SecondaryAccountHolder} = require("../../models/secondaryHolder.model")
 const {Account} = require("../../models/account.model")
+const {Transaction} = require("../../models/transaction.model")
 
 const {DatabaseUtil} = require("../utils/database.util")
 const {Op} = require("sequelize");
@@ -52,6 +54,10 @@ module.exports.TransactionService = class TransactionService{
                          accountNumber:senderAccountNumber
                         }
                     })
+                    transactionDetails["transactionId"] = uuid();
+                    transactionDetails["transactionEndedAt"] = new Date()
+                    await Transaction.create(transactionDetails)
+
                 return "SUCCESS"
 
 
@@ -67,14 +73,14 @@ module.exports.TransactionService = class TransactionService{
                         accountNumber:senderAccountNumber
                        }
                    })
-
+                    transactionDetails["transactionId"] = uuid();
+                    transactionDetails["transactionEndedAt"] = new Date()
+                    await Transaction.create(transactionDetails)
                 }
                 else{
                     throw  new Error("Transaction Failed due to Insufficient Balance")
                 }
                 return "SUCCESS"
-
-
             }
             
         } catch (error) {
@@ -88,7 +94,7 @@ module.exports.TransactionService = class TransactionService{
             // if(userDetails["panCard"])
             await DatabaseUtil.getDbConnection();
             const body = JSON.parse(event.body)
-            let {accountNumber,secondaryId , startDate,endDate} = body
+            let {accountNumber,secondaryId , customerId,startDate,endDate} = body
             startDate = startDate ? startDate : '1970-01-01'
             const currDate = new Date();
             endDate = endDate ? endDate + ' 18:29:59' : currDate.toISOString().split('T')[0] + ' ' + currDate.toTimeString().split(' ')[0];
@@ -109,6 +115,14 @@ module.exports.TransactionService = class TransactionService{
                 return secondaryUserTransaction
             }
             else{
+                const checkForPrimaryUser = Account.findOne({
+                    where:{
+                        customerId:customerId
+                    }
+                })
+                if(!checkForPrimaryUser){
+                    throw new Error("Not a Primary User")
+                }
                 const primaryUserTransaction = await Account.findAll({
                     where:{
                         accountNumber: accountNumber,
@@ -120,8 +134,7 @@ module.exports.TransactionService = class TransactionService{
                 }
                 return primaryUserTransaction
 
-            }
-            
+            }    
             
         } catch (error) {
             console.error(error)

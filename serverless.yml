@@ -108,7 +108,28 @@ functions:
      - http:
          path: /auth/resetTemporaryPassword
          method: post
-         cors: true          
+         cors: true
+  create_secondary_account:
+    handler: src/api/secondaryaccount/createSecondaryUser.createSecondaryUser
+    events:         
+     - http:
+         path: /secondaryaccount/create
+         method: post
+         cors: true                    
+  delete_secondary_account:
+    handler: src/api/secondaryaccount/deleteSecondaryUser.deleteSecondaryUser
+    events:         
+     - http:
+         path: /secondaryaccount/delete
+         method: delete
+         cors: true                    
+  get_secondary_account:
+    handler: src/api/secondaryaccount/getAllSecondaryUsers.getAllSecondaryUsers
+    events:         
+     - http:
+         path: /secondaryaccount/get/all
+         method: post
+         cors: true                    
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
