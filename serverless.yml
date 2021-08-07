@@ -54,18 +54,18 @@ functions:
          method: post
          cors: true
   createTransaction:
-    handler: src/api/auth/createTransaction.createTransaction
+    handler: src/api/transaction/createTransaction.createTransaction
     events:
       - http:
           path: /transaction/createTransaction
           method: post
           cors: true
   getTransaction:
-    handler: src/api/auth/getTransaction.getTransaction
+    handler: src/api/transaction/getTransaction.getTransaction
     events:
       - http:
           path: /transaction/getTransaction
-          method: post
+          method: get
           cors: true
   create_account:
     handler: src/api/account/account.create.createAccount

@@ -35,8 +35,9 @@ module.exports = {
         },
         down: async(queryInterface, Sequelize) => {
             return Promise.all([
-                await queryInterface.dropTable('AccountHolder'),
                 await queryInterface.dropTable('Account'),
+
+                await queryInterface.dropTable('AccountHolder'),
             ]);
         },
     }; 

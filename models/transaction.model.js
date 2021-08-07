@@ -52,7 +52,6 @@ const Transaction = sequelize.define('Transaction', {
   },
   senderAccountNumber: {
     type: DataTypes.INTEGER,
-    allowNull: false
   },
   receiverAccountNumber: {
     type: DataTypes.INTEGER,

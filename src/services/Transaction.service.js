@@ -1,4 +1,4 @@
-const { AuthUtil } = require("../utils/auth.util")
+//const { AuthUtil } = require("../utils/auth.util")
 const {AccountHolder} = require("../../models/accountHolder.model")
 const uuid  = require("uuid").v4
 
@@ -32,8 +32,8 @@ module.exports.TransactionService = class TransactionService{
                         secondaryId: secondaryId,
                         fundsAllocated:{
                             [Op.gte]: amount,
-                        }
-
+                        },
+                        isActive:true
                          
                     },attributes:["fundsAllocated"]
                 })
@@ -54,8 +54,15 @@ module.exports.TransactionService = class TransactionService{
                          accountNumber:senderAccountNumber
                         }
                     })
-                    transactionDetails["transactionId"] = uuid();
+                    transactionDetails["transactionID"] = uuid();
                     transactionDetails["transactionEndedAt"] = new Date()
+                    transactionDetails["isSuccessful"] = true
+                    transactionDetails["senderSecondary"] = true
+                    transactionDetails["description"] = "Debited"
+
+                    //transactionDetails["accountNumber"] = senderAccountNumber;
+
+                    console.log("Transactions  ",transactionDetails)
                     await Transaction.create(transactionDetails)
 
                 return "SUCCESS"
@@ -73,9 +80,13 @@ module.exports.TransactionService = class TransactionService{
                         accountNumber:senderAccountNumber
                        }
                    })
-                    transactionDetails["transactionId"] = uuid();
+                    transactionDetails["transactionID"] = uuid();
                     transactionDetails["transactionEndedAt"] = new Date()
+                    transactionDetails["isSuccessful"] = true
+                    transactionDetails["senderSecondary"] = true
+                    transactionDetails["description"] = "Debited"
                     await Transaction.create(transactionDetails)
+                    
                 }
                 else{
                     throw  new Error("Transaction Failed due to Insufficient Balance")
@@ -88,16 +99,49 @@ module.exports.TransactionService = class TransactionService{
             throw new Error(error)
         }
     }
-    static async getTransactionService(event){
+    static async getTransactionService(requestPayload){
         try {
-            console.log('user details ', event)
+            console.log('user details ', requestPayload)
             // if(userDetails["panCard"])
             await DatabaseUtil.getDbConnection();
-            const body = JSON.parse(event.body)
-            let {accountNumber,secondaryId , customerId,startDate,endDate} = body
+            let {accountNumber,secondaryId , customerId,startDate,endDate,transactionType} = requestPayload
+            
             startDate = startDate ? startDate : '1970-01-01'
             const currDate = new Date();
             endDate = endDate ? endDate + ' 18:29:59' : currDate.toISOString().split('T')[0] + ' ' + currDate.toTimeString().split(' ')[0];
+            let where;
+                if(transactionType ){ //If transaction type is present
+                    if(transactionType=="credit"){
+                        where = {
+                            senderAccountNumber: accountNumber,
+                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
+
+                        }
+                    }
+                    else if(transactionType=="debit"){
+                        where = {
+                            receiverAccountNumber: accountNumber,
+                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
+
+                        }
+
+                    }
+                    else{
+                        where = {
+                            [Op.or]:[{senderAccountNumber: accountNumber}, {receiverAccountNumber: accountNumber}],
+                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
+
+                        }
+
+                    }
+                }
+                else{
+                    where = {
+                        [Op.or]:[{senderAccountNumber: accountNumber}, {receiverAccountNumber: accountNumber}],
+                        transactionStartedAt: { [Op.between]: [startDate, endDate] }
+
+                    }
+                }
             if(secondaryId){
                 
                 const secondaryUserTransaction = await SecondaryAccountHolder.findAll({
@@ -110,9 +154,12 @@ module.exports.TransactionService = class TransactionService{
                 if(!secondaryUserTransaction){
                     throw new Error("Invalid Account Info") 
                 }
+                const GetTransactions = await Transaction.findAll({
+                    where: where
+                })
+                    return GetTransactions
 
                 //console.log("PrimaryUser Transaction ",primaryUserTransaction);
-                return secondaryUserTransaction
             }
             else{
                 const checkForPrimaryUser = Account.findOne({
@@ -126,13 +173,17 @@ module.exports.TransactionService = class TransactionService{
                 const primaryUserTransaction = await Account.findAll({
                     where:{
                         accountNumber: accountNumber,
-                        createdAt: { [Op.between]: [startDate, endDate] },
                     }
                 })
+
                 if(!primaryUserTransaction){
                     throw new Error("Invalid Account Info") 
                 }
-                return primaryUserTransaction
+                
+                const GetTransactions = await Transaction.findAll({
+                    where: where
+                })
+                    return GetTransactions
 
             }    
             
