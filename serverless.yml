@@ -14,10 +14,22 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   memorySize: 512
+  environment:
+   stage: ${self:provider.stage}
+   region: ${self:provider.stage}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - cognito-idp:*
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - rds:*
+      Resource: "*"
 plugins:
   - serverless-offline
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
+     
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"
