@@ -61,7 +61,13 @@ const Account = sequelize.define('Account', {
   },
   customerId: {
     type: DataTypes.BIGINT,
+  },
+  actualBalance:{
+    type: DataTypes.BIGINT,
+    allowNull: false,
+    defaultValue: 0.00
   }
+  
 },
 {
   tableName: 'Account',

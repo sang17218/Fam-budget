@@ -10,12 +10,12 @@ module.exports.AccountService = class AccountService {
     static async createAccountService(accountDetails) {
         try {
             console.log('account details ', accountDetails)
-            accountDetails["accountNumber"] = randGenerator()
+            // accountDetails["accountNumber"] = randGenerator()
             await DatabaseUtil.getDbConnection()
             // const { accountHolder, ...account} = {...accountDetails };
-            while(await Account.findOne( {where : { accountNumber: accountDetails["accountNumber"]} })){
-                accountDetails["accountNumber"] = randGenerator()
-            }
+            // while(await Account.findOne( {where : { accountNumber: accountDetails["accountNumber"]} })){
+            //     accountDetails["accountNumber"] = randGenerator()
+            // }
             await Account.create(accountDetails)
             return "SUCCESS"
         } catch (error) {

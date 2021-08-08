@@ -21,13 +21,9 @@ module.exports.CardService = class CardService{
             const expirationDate = new Date()
             expirationDate.setFullYear( expirationDate.getFullYear() + 3)
             accountDetails["cvv"] = cvvGenerator()
-            accountDetails["cardNumber"] = randGenerator()
+            // accountDetails["cardNumber"] = randGenerator()
             accountDetails["expiryPeriod"] = expirationDate
             accountDetails["type"] = accountDetails.type
-
-            await Card.findOne({
-                where: {cardNumber: accountDetails["cardNumber"]}
-            }).then( (data) => { if(data) throw new Error("Card Number Exists")} )
 
             await DatabaseUtil.getDbConnection()
             if(accountDetails["customerId"] && !accountDetails["senderSecondary"]){

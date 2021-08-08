@@ -18,7 +18,8 @@ const Card = sequelize.define('Card', {
         primaryKey: true,
         validate: {
             len: [16, 18]
-        }
+        },
+        autoIncrement: true 
     },
     accountNumber: {
         type: DataTypes.BIGINT,

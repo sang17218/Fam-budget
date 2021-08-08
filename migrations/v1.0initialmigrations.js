@@ -21,6 +21,7 @@ module.exports = {
             accountNumber BIGINT(8) auto_increment NOT NULL,
             branch VARCHAR(255) NOT NULL,
             balance FLOAT NOT NULL,
+            actualBalance FLOAT NOT NULL,
             accountType VARCHAR(255) NOT NULL,
             minimumBalance FLOAT NOT NULL,
             bcity VARCHAR(255) NOT NULL,
@@ -35,8 +36,9 @@ module.exports = {
         },
         down: async(queryInterface, Sequelize) => {
             return Promise.all([
-                await queryInterface.dropTable('AccountHolder'),
                 await queryInterface.dropTable('Account'),
+
+                await queryInterface.dropTable('AccountHolder'),
             ]);
         },
     }; 

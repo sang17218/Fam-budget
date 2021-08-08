@@ -6,7 +6,6 @@ module.exports = {
 
             await queryInterface.sequelize.query(`CREATE TABLE IF NOT EXISTS Transaction(
               transactionID VARCHAR(255) NOT NULL,
-              accountNumber BIGINT(8) NOT NULL,
               merchant VARCHAR(255),
               description VARCHAR(255) NOT NULL,
               amount FLOAT NOT NULL,
@@ -19,7 +18,7 @@ module.exports = {
               receiverAccountNumber  BIGINT(8) NOT NULL,
               CONSTRAINT PK_Transaction PRIMARY KEY (transactionID),
               CONSTRAINT FK_SecondaryAccountHolder_T FOREIGN KEY (secondaryId) REFERENCES SecondaryAccountHolder(secondaryId),
-              CONSTRAINT FK_Account_T FOREIGN KEY (accountNumber) REFERENCES Account(accountNumber) )`),
+              CONSTRAINT FK_Account_T FOREIGN KEY (senderAccountNumber) REFERENCES Account(accountNumber) )`),
 
             await queryInterface.sequelize.query(`
             CREATE TABLE IF NOT EXISTS Policy (

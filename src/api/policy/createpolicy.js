@@ -1,10 +1,10 @@
-const { CardService } = require("../../services/card.service")
+const { PolicyService } = require("../../services/policy.service")
 
 module.exports.createPolicy = async function createPolicy(event){
     const body = JSON.parse(event.body)
     try {
       console.log("createPolicy api started")
-      const response = await CardService.createCard(body)
+      const response = await PolicyService.createPolicy(body)
       console.log("createPolicy api end")
       return {
         statusCode: 200,

@@ -19,6 +19,8 @@ const sequelize = new Sequelize({
     //     primaryKey: true,
     //     autoIncrement: true 
     //   },
+    
+
     secondaryId: {
         type: DataTypes.BIGINT,
         allowNull: false,
@@ -26,7 +28,7 @@ const sequelize = new Sequelize({
             len: [9, 11]
         },
         primaryKey: true,
-        // autoIncrement: true 
+        autoIncrement: true 
     },
     accountNumber: {
         type: DataTypes.BIGINT,
@@ -85,7 +87,6 @@ const sequelize = new Sequelize({
     },
     updatedAt: {
         type: DataTypes.DATE,
-        allowNull: false
     },
     isMinor: {
         type: DataTypes.BOOLEAN,
@@ -96,7 +97,11 @@ const sequelize = new Sequelize({
         allowNull: false,
         defaultValue: 0.00
     },
-
+    fundsSpent : {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.00
+    }
 }, {
     tableName: 'SecondaryAccountHolder',
     timestamps: false

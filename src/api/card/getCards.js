@@ -1,10 +1,10 @@
 const { CardService } = require("../../services/card.service")
 
 module.exports.getCards = async function getCards(event){
-    const body = JSON.parse(event.body)
     try {
       console.log("getCards api started")
-      const response = await CardService.createCard(body)
+      const requestParams = event["queryStringParameters"]
+      const response = await CardService.getCards(requestParams)
       console.log("getCards  api end")
       return {
         statusCode: 200,
