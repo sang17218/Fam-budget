@@ -67,6 +67,27 @@ functions:
           path: /transaction/getTransaction
           method: get
           cors: true
+  monthly_overview:
+    handler: src/api/reports/expenseTracking.expenseTracking
+    events:
+      - http:
+          path: /reports/getMonthly
+          method: get
+          cors: true
+  get_recent_transactions:
+    handler: src/api/reports/getRecentTransaction.getRecentTransaction
+    events:
+      - http:
+          path: /reports/getRecentTransactions
+          method: get
+          cors: true
+  get_balance:
+    handler: src/api/reports/getBalance.getBalance
+    events:
+      - http:
+          path: /reports/getBalance
+          method: get
+          cors: true
   create_account:
     handler: src/api/account/account.create.createAccount
     events:         

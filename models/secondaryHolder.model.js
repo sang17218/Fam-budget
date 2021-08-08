@@ -97,7 +97,11 @@ const sequelize = new Sequelize({
         allowNull: false,
         defaultValue: 0.00
     },
-
+    fundsSpent : {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.00
+    }
 }, {
     tableName: 'SecondaryAccountHolder',
     timestamps: false

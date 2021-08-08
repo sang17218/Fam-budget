@@ -24,7 +24,15 @@ module.exports.secondaryUserService = class secondaryUserService {
             if(!AccountBalance){
                 throw new Error("Insufficient Funds")
             }
+            const currentBalance =  AccountBalance.balance;
+            console.log("Account Balance ",currentBalance);
+             await Account.update({
+                 balance: currentBalance-fundsRequested},
+                 {where: {
+                    accountNumber:accountNumber,
+            }});
             const response = await SecondaryAccountHolder.create(accountDetails)
+
             //console.log("Response ",response.secondaryId);
             accountDetails["secondaryId"] = response.secondaryId
             await AuthUtil.adminCreateUser(accountDetails)

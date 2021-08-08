@@ -17,6 +17,7 @@ module.exports = {
               isActive TINYINT(1) NOT NULL DEFAULT false,
               createdAt DATETIME NOT NULL,
               updatedAt DATETIME,
+              fundsSpent BIGINT(8) NOT NULL,
               CONSTRAINT PK_SecondaryAccountHolder PRIMARY KEY (secondaryId),
               CONSTRAINT FK_Account_SAH FOREIGN KEY (accountNumber) REFERENCES Account(accountNumber)
           )`),
