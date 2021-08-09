@@ -204,7 +204,14 @@ functions:
      - http:
          path: /policy/update
          method: put
-         cors: true                     
+         cors: true      
+  getS3UploadUrl:
+    handler: src/api/accountHolder/getPresignedUrl.getKycUrl
+    events:         
+     - http:
+         path: /accountHolder/getKycUrl
+         method: get
+         cors: true                           
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
