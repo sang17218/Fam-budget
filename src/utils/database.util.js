@@ -7,17 +7,28 @@ const { Sequelize } = require('sequelize');
 // const {Transaction} = require('../../models/transaction.model')
 
 module.exports.DatabaseUtil = class DatabaseUtil {
-    static sequelize = new Sequelize({
-        host: 'localhost',
-        database: "FamilyBudget",
-        username: "root",
-        password: "Itsasecret2@",
-        port: 3306,
-        dialect: "mysql",
-        benchmark: true,
-        // dialectModule: 'mysql2'
 
-    })
+    static sequelize = new Sequelize(
+        // {
+    //     host: 'localhost',
+    //     database: "FamilyBudget",
+    //     username: "root",
+    //     password: "",
+    //     port: 3306,
+    //     dialect: "mysql",
+    //     benchmark: true,
+    //     // dialectModule: 'mysql2'
+
+    // }
+    {
+        "username": "admin",
+        "password": "Database123!",
+        "database": "familyBudget",
+        "host": "database-family-budget.cn8pmdhr4iv3.us-east-1.rds.amazonaws.com",
+        "dialect": "mysql",
+        "port": 3306,
+        "benchmark": true,
+      })
     static async getDbConnection() {
         console.log("getDbConnection started")
         try {

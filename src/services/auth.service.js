@@ -7,7 +7,7 @@ module.exports.AuthService = class AuthService {
         const cognitoSuccess = false
         try {
             console.log('user details ', userDetails)
-            // if(userDetails["panCard"])
+            // if(userDetails["panCard"]) 
             await AuthUtil.adminCreateUser(userDetails)
             await AuthUtil.disableCognitoUser(userDetails.username)
             cognitoSuccess = true

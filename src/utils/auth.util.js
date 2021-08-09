@@ -4,7 +4,7 @@ const { APPLICATION_CONSTANTS } = require('../constants/application.constants');
 module.exports.AuthUtil = class AuthUtil {
   static async adminCreateUser(userDetails) {
     try {
-      const { firstName, lastName, mobile, email } = userDetails
+      const { firstName, lastName, mobile, email, customerId, secondaryId } = userDetails
 
       var cognitoISP = new AWS.CognitoIdentityServiceProvider();
       var params = {

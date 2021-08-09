@@ -14,10 +14,22 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   memorySize: 512
+  environment:
+   stage: ${self:provider.stage}
+   region: ${self:provider.stage}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - cognito-idp:*
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - rds:*
+      Resource: "*"
 plugins:
   - serverless-offline
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
+     
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"
@@ -150,7 +162,49 @@ functions:
      - http:
          path: /secondaryaccount/get/all
          method: post
-         cors: true                    
+         cors: true              
+  disable_primary_account:
+    handler: src/api/accountHolder/disableUser.disablePrimaryUser
+    events:         
+     - http:
+         path: /primaryuser/disable
+         method: put
+         cors: true    
+  create_card:
+    handler: src/api/card/createCard.createCard
+    events:         
+     - http:
+         path: /card/create
+         method: post
+         cors: true 
+  get_cards:
+    handler: src/api/card/getCards.getCards
+    events:         
+     - http:
+         path: /card/get
+         method: get
+         cors: true    
+  create_policy:
+    handler: src/api/policy/createpolicy.createPolicy
+    events:         
+     - http:
+         path: /policy/create
+         method: post
+         cors: true    
+  get_policy:
+    handler: src/api/policy/getPolicies.getPolicy
+    events:         
+     - http:
+         path: /policy/get
+         method: get
+         cors: true     
+  update_policy:
+    handler: src/api/policy/updatePolicy.updatePolicy
+    events:         
+     - http:
+         path: /policy/update
+         method: put
+         cors: true                     
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

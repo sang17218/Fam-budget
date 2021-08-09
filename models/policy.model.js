@@ -2,10 +2,10 @@ const { Sequelize, DataTypes } = require('sequelize');
 const {Account} = require('../models/account.model')
 const {SecondaryAccountHolder} = require("../models/secondaryHolder.model")
 const sequelize = new Sequelize({
-    "username": "root",
-    "password": "ashwin1234",
-    "database": "FamilyBudget",
-    "host": "127.0.0.1",
+    "username": "admin",
+    "password": "Database123!",
+    "database": "familyBudget",
+    "host": "database-family-budget.cn8pmdhr4iv3.us-east-1.rds.amazonaws.com",
     "dialect": "mysql",
     "port": 3306
   });
@@ -15,7 +15,7 @@ const Policy = sequelize.define('Policy', {
         type: DataTypes.UUID,
         allowNull: false,
         validate: {
-            len: [7, 10]
+            len: [7, 16]
         },
         primaryKey: true,
     },
@@ -49,11 +49,6 @@ const Policy = sequelize.define('Policy', {
     isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
-    },
-    isSecondaryHolder: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
     }
 },{
     tableName: "Policy",

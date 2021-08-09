@@ -5,10 +5,10 @@ const {AccountHolder} = require('../models/accountHolder.model')
 // const {Transaction} = require('../models/transaction.model')
 
 const sequelize = new Sequelize({
-  "username": "root",
-  "password": "ashwin1234",
-  "database": "FamilyBudget",
-  "host": "127.0.0.1",
+  "username": "admin",
+  "password": "Database123!",
+  "database": "familyBudget",
+  "host": "database-family-budget.cn8pmdhr4iv3.us-east-1.rds.amazonaws.com",
   "dialect": "mysql",
   "port": 3306
 });
