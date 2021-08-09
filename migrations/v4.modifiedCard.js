@@ -3,6 +3,8 @@ module.exports = {
         return Promise.all([
             await queryInterface.sequelize.query(`ALTER TABLE Card
             ADD secondaryId BIGINT(8),
+            ADD pin INTEGER,
+            ADD isActive TINYINT(1) NOT NULL DEFAULT false,
             ADD senderSecondary TINYINT(1) NOT NULL DEFAULT false,
             ADD CONSTRAINT FK_SecondaryAccountHolder_Card FOREIGN KEY (secondaryId) REFERENCES SecondaryAccountHolder(secondaryId)`),
         ]);
