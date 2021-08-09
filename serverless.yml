@@ -64,147 +64,220 @@ functions:
      - http:
          path: /auth/signup
          method: post
-         cors: true
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
   createTransaction:
     handler: src/api/transaction/createTransaction.createTransaction
     events:
       - http:
           path: /transaction/createTransaction
           method: post
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - "*"  
+
   getTransaction:
     handler: src/api/transaction/getTransaction.getTransaction
     events:
       - http:
           path: /transaction/getTransaction
           method: get
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - "*"
   monthly_overview:
     handler: src/api/reports/expenseTracking.expenseTracking
     events:
       - http:
           path: /reports/getMonthly
           method: get
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - "*"
   get_recent_transactions:
     handler: src/api/reports/getRecentTransaction.getRecentTransaction
     events:
       - http:
           path: /reports/getRecentTransactions
           method: get
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - "*"
   get_balance:
     handler: src/api/reports/getBalance.getBalance
     events:
       - http:
           path: /reports/getBalance
           method: get
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - "*"
   create_account:
     handler: src/api/account/account.create.createAccount
     events:         
      - http:
          path: /account/create
          method: post
-         cors: true         
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
   modify_kyc:
     handler: src/api/accountHolder/updateKyc.updateKyc
     events:         
      - http:
          path: /accountHolder/updateKyc
          method: post
-         cors: true 
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
+
   login:
     handler: src/api/auth/login.login
     events:         
      - http:
          path: /auth/login
          method: post
-         cors: true 
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
   forgot_password:
     handler: src/api/auth/forgotPassword.forgotPassword
     events:         
      - http:
          path: /auth/forgotPassword
          method: post
-         cors: true 
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
   confirm_password:
     handler: src/api/auth/confirmPassword.confirmPassword
     events:         
      - http:
          path: /auth/confirmPassword
          method: post
-         cors: true 
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
   reset_temporary_password:
     handler: src/api/auth/resetTemporaryPass.resetTemporaryPassword
     events:         
      - http:
          path: /auth/resetTemporaryPassword
          method: post
-         cors: true
+         cors:
+          origin: "*"
+          headers:
+            - "*"
   create_secondary_account:
     handler: src/api/secondaryaccount/createSecondaryUser.createSecondaryUser
     events:         
      - http:
          path: /secondaryaccount/create
          method: post
-         cors: true                    
+         cors:
+          origin: "*"
+          headers:
+            - "*"                  
   delete_secondary_account:
     handler: src/api/secondaryaccount/deleteSecondaryUser.deleteSecondaryUser
     events:         
      - http:
          path: /secondaryaccount/delete
          method: delete
-         cors: true                    
+         cors:
+          origin: "*"
+          headers:
+            - "*"                    
   get_secondary_account:
     handler: src/api/secondaryaccount/getAllSecondaryUsers.getAllSecondaryUsers
     events:         
      - http:
          path: /secondaryaccount/get/all
          method: post
-         cors: true              
+         cors:
+          origin: "*"
+          headers:
+            - "*"              
   disable_primary_account:
     handler: src/api/accountHolder/disableUser.disablePrimaryUser
     events:         
      - http:
          path: /primaryuser/disable
          method: put
-         cors: true    
+         cors:
+          origin: "*"
+          headers:
+            - "*"    
   create_card:
     handler: src/api/card/createCard.createCard
     events:         
      - http:
          path: /card/create
          method: post
-         cors: true 
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
   get_cards:
     handler: src/api/card/getCards.getCards
     events:         
      - http:
          path: /card/get
          method: get
-         cors: true    
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
   create_policy:
     handler: src/api/policy/createpolicy.createPolicy
     events:         
      - http:
          path: /policy/create
          method: post
-         cors: true    
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+    
   get_policy:
     handler: src/api/policy/getPolicies.getPolicy
     events:         
      - http:
          path: /policy/get
          method: get
-         cors: true     
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+    
   update_policy:
     handler: src/api/policy/updatePolicy.updatePolicy
     events:         
      - http:
          path: /policy/update
          method: put
-         cors: true                     
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+                     
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

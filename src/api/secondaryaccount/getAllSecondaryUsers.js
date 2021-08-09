@@ -14,7 +14,8 @@ module.exports.getAllSecondaryUsers= async function getAllSecondaryUsers(event){
       console.error(error)
       return {
         statusCode: 500,
-        body: JSON.stringify(error.message)
+        body: JSON.stringify(error.message),
+        headers: DEFAULT_HEADERS
       }
     }
 }
