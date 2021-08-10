@@ -1,4 +1,5 @@
 const { secondaryUserService } = require("../../services/secondaryUser.service")
+const { DEFAULT_HEADERS } = require("../../constants/application.constants");
 
 module.exports.createSecondaryUser= async function createSecondaryUser(event){
     const body = JSON.parse(event.body)

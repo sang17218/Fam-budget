@@ -108,7 +108,8 @@ module.exports.TransactionService = class TransactionService{
             
             startDate = startDate ? startDate : '1970-01-01'
             const currDate = new Date();
-            endDate = endDate ? endDate + ' 18:29:59' : currDate.toISOString().split('T')[0] + ' ' + currDate.toTimeString().split(' ')[0];
+            endDate = endDate ? endDate : new Date()//+ ' 18:29:59' : currDate.toISOString().split('T')[0] + ' ' + currDate.toTimeString().split(' ')[0];
+            console.log("STARTDATA ",startDate,endDate);
             let where;
                 if(transactionType ){ //If transaction type is present
                     if(transactionType=="credit"){

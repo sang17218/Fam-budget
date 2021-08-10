@@ -1,4 +1,5 @@
 const { secondaryUserService } = require("../../services/secondaryUser.service")
+const { DEFAULT_HEADERS } = require("../../constants/application.constants");
 
 module.exports.getAllSecondaryUsers= async function getAllSecondaryUsers(event){
     const body = JSON.parse(event.body)
@@ -8,7 +9,8 @@ module.exports.getAllSecondaryUsers= async function getAllSecondaryUsers(event){
       console.log("get all SecondaryUser api end")
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
+        body: JSON.stringify(response),
+        headers: DEFAULT_HEADERS
       }
     } catch (error) {
       console.error(error)

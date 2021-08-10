@@ -1,4 +1,5 @@
 const { PolicyService } = require("../../services/policy.service")
+const { DEFAULT_HEADERS } = require("../../constants/application.constants");
 
 module.exports.getPolicy = async function getPolicy(event){
     try {
@@ -8,13 +9,15 @@ module.exports.getPolicy = async function getPolicy(event){
       console.log("getPolicy api end")
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
+        body: JSON.stringify(response),
+        headers:DEFAULT_HEADERS
       }
     } catch (error) {
       console.error('getPolicy error', error)
       return {
         statusCode: 500,
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
+        headers:DEFAULT_HEADERS
       }
     }
 }
