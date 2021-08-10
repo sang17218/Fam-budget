@@ -21,12 +21,12 @@ module.exports.CardService = class CardService{
             const expirationDate = new Date()
             expirationDate.setFullYear( expirationDate.getFullYear() + 3)
             accountDetails["cvv"] = cvvGenerator()
-            // accountDetails["cardNumber"] = randGenerator()
+            accountDetails["cardNumber"] = String(randGenerator())
             accountDetails["expiryPeriod"] = expirationDate
             accountDetails["type"] = accountDetails.type
 
             await DatabaseUtil.getDbConnection()
-            if(accountDetails["customerId"] && !accountDetails["senderSecondary"]){
+            if(accountDetails["customerId"] && accountDetails["senderSecondary"]=='false'){
                 const checkPrimaryUser = await Account.findOne({
                     where: { customerId:  accountDetails["customerId"] }
                 })
@@ -36,10 +36,10 @@ module.exports.CardService = class CardService{
                     throw new Error("User details mismatch")
                 }
             }
-            else if(accountDetails["senderSecondary"]){
+            else if(accountDetails["senderSecondary"] == 'true'){
                 response = await Card.create(accountDetails)
             }
-            console.log(response)
+
             return "SUCCESS"
         } catch (error) {
             console.error(error)
@@ -54,10 +54,9 @@ module.exports.CardService = class CardService{
             // const { accountHolder, ...account} = {...accountDetails };
 
             await DatabaseUtil.getDbConnection()
-            if(accountDetails["customerId"] && !accountDetails["senderSecondary"]){
+            if(accountDetails["customerId"] && accountDetails["senderSecondary"]== 'false'){
                 const checkPrimaryUser = await Account.findOne({
                     where: { customerId:  accountDetails["customerId"] },
-                    attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod']
                 })
                 if(checkPrimaryUser){
                     response = await Card.findAll({
@@ -68,12 +67,12 @@ module.exports.CardService = class CardService{
                     throw new Error("User details mismatch")
                 }
             }
-            else if(accountDetails["senderSecondary"]){
+            else if(accountDetails["senderSecondary"]=='true'){
                 response = await Card.findAll({
-                    where: {secondaryId: accountDetails["secondaryId"] }
+                    where: {secondaryId: accountDetails["secondaryId"] },
+                    attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod']
                 })
             }
-            console.log(response)
             return response
         } catch (error) {
             console.error('getCards error', error)

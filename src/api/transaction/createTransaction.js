@@ -10,13 +10,15 @@ module.exports.createTransaction = async function createTransaction(event){
       console.log("created Transaction ended")
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
+        body: JSON.stringify(response),
+        headers: DEFAULT_HEADERS
       }
     } catch (error) {
       console.error(error)
       return {
         statusCode: 500,
-        body: JSON.stringify(error.message)
+        body: JSON.stringify(error.message),
+        headers: DEFAULT_HEADERS
       }
     }
 
