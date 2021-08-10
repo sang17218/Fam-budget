@@ -2,24 +2,26 @@ const { AuthUtil } = require("../utils/auth.util")
 const { AccountHolder } = require("../../models/accountHolder.model")
 const { DatabaseUtil } = require("../utils/database.util")
 const CognitoIdentity = require('amazon-cognito-identity-js')
+const { uploadKycToS3 } = require("../utils/s3.util")
 module.exports.AuthService = class AuthService {
     static async signUpUser(userDetails) {
         const cognitoSuccess = false
         try {
             console.log('user details ', userDetails)
-            // if(userDetails["panCard"]) 
             await AuthUtil.adminCreateUser(userDetails)
             await AuthUtil.disableCognitoUser(userDetails.username)
             cognitoSuccess = true
             await DatabaseUtil.getDbConnection()
             //  const {firstName, lastName, mobile, email, gender, city, title, panCard } = userDetails
-            return await AccountHolder.create(userDetails)
+            await AccountHolder.create(userDetails).then( (data) => userDetails["customerId"] = data["customerId"])
+            await uploadKycToS3(userDetails)
+            return "SUCCESS"
 
         } catch (error) {
             console.error(error)
-            if (!cognitoSuccess) {
-                await AuthUtil.deleteUser(userDetails.username)
-            }
+            // if (!cognitoSuccess) {
+            //     await AuthUtil.deleteUser(userDetails.username)
+            // }
             throw new Error(error)
         }
     }
