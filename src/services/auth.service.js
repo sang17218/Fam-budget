@@ -5,9 +5,9 @@ const CognitoIdentity = require('amazon-cognito-identity-js')
 const { uploadKycToS3 } = require("../utils/s3.util")
 module.exports.AuthService = class AuthService {
     static async signUpUser(userDetails) {
-        const cognitoSuccess = false
+        let cognitoSuccess = false
         try {
-            console.log('user details ', userDetails)
+            // console.log('user details ', userDetails)
             await DatabaseUtil.getDbConnection()
             //  const {firstName, lastName, mobile, email, gender, city, title, panCard } = userDetails
             await AccountHolder.create(userDetails).then( (data) => userDetails["username"] = data["customerId"])
