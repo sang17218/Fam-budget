@@ -14,11 +14,12 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
     static async getMonthlyOverview(event) {
         try {
             const requestParams = event["queryStringParameters"];
-            console.log('Expense Tracking ', requestParams) 
             let { accountNumber , secondaryId  } = requestParams
-            console.log("account number ",accountNumber)
-            const startOfMonth = new Date(new Date().setDate(new Date().getDate() - new Date().getDate() + 1));
-            startOfMonth.setUTCHours(23, 59 , 59 , 999);
+            const currentYear = new Date().getFullYear()
+            const date = new Date();
+            const startOfYear = new Date(date.setUTCFullYear(currentYear,0,1));
+            
+            startOfYear.setUTCHours(0, 0 , 0);
             // const { accountHolder, ...account} = {...accountDetails };
             let where;
             if(secondaryId){
@@ -26,7 +27,7 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
                 where ={
                     senderAccountNumber: accountNumber,
                     secondaryId:secondaryId,
-                    transactionStartedAt: { [Op.gt]: startOfMonth, }
+                    transactionStartedAt: { [Op.gte]: startOfYear, }
 
                 }
 
@@ -34,17 +35,70 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
             else{
                 where = {
                     senderAccountNumber: accountNumber,
-                    transactionStartedAt: { [Op.gt]: startOfMonth, }
+                    transactionStartedAt: { [Op.gte]: startOfYear, }
                 }
 
             }
 
             await DatabaseUtil.getDbConnection()
-            const monthlyTransactions = await Transaction.findAll({
+            const yearlyTransactions = await Transaction.findAll({
                 where: where
             })
+            console.log("Yearly ",yearlyTransactions);
+            const Months = { "Jan" :0 , "Feb" : 0 ,"March" :0 , "Apr" : 0 ,"May":0,"Jun":0,"July":0,"Aug":0,"Sept":0,"Oct":0,"Nov":0,"Dec":0}
 
-            return monthlyTransactions
+            for(let transaction of yearlyTransactions){
+                const startedAt = transaction["transactionStartedAt"];
+                const month = new Date(startedAt);
+                const getMonth = month.getMonth();
+                const amount = transaction["amount"];
+                if(getMonth == 0){
+                    Months["Jan"]+=amount
+                }
+                else if(getMonth == 1){
+                    Months["Feb"]+=amount
+                }
+                else if(getMonth == 2){
+                    Months["Mar"]+=amount
+                }
+                else if(getMonth == 3){
+                    Months["Apr"]+=amount
+                }
+                else if(getMonth == 4){
+                    Months["May"]+=amount
+                }
+                else if(getMonth == 5){
+                    Months["Jun"]+=amount
+                }
+                else if(getMonth == 6){
+                    Months["July"]+=amount
+                }
+                else if(getMonth == 7){
+                    Months["Aug"]+=amount
+                }
+
+                else if(getMonth == 8){
+                    Months["Sept"]+=amount
+                }
+
+                else if(getMonth == 9){
+                    Months["Oct"]+=amount
+                }
+
+                else if(getMonth == 10){
+                    Months["Nov"]+=amount
+                }
+
+                else if(getMonth == 11){
+                    Months["Dec"]+=amount
+                }
+
+
+
+
+            }
+
+            return Months
         } catch (error) {
             console.error(error)
             throw new Error(error)
