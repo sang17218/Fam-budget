@@ -154,16 +154,16 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
             const s3 = new AWS.S3();
             const S3params = {
             Bucket: 'fambudget-bucket',
-            Key: `primary-users/${uniqueId}/`,
+            Key: `primary-users/reports/${uniqueId}/AdminReport.xlsx`,
             Body: stream,
             ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             };
             const S3upload = await s3.upload(S3params).promise();
-            const S3signedURL = s3.getSignedUrl("getObject", {
+            const S3signedURL = await  s3.getSignedUrlPromise("getObject", {
                 Bucket: 'fambudget-bucket',
-                Key: `primary-users/${uniqueId}/`,
+                Key: `primary-users/reports/${uniqueId}/AdminReport.xlsx`,
                 Expires: signedUrlExpireSeconds
-              });
+              })
         
             return S3signedURL;
           } catch (error) {

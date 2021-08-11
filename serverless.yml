@@ -26,6 +26,10 @@ provider:
       Action:
         - rds:*
       Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - s3:*
+      Resource: "*"
 plugins:
   - serverless-offline
 # you can add statements to the Lambda function's IAM Role here
