@@ -34,9 +34,10 @@ module.exports.secondaryUserService = class secondaryUserService {
             const response = await SecondaryAccountHolder.create(accountDetails)
 
             //console.log("Response ",response.secondaryId);
-            accountDetails["secondaryId"] = response.secondaryId
+            accountDetails["username"] = response.secondaryId
+            accountDetails["role"] = 'Secondary-Account-Holder'
             await AuthUtil.adminCreateUser(accountDetails)
-            await AuthUtil.disableCognitoUser(accountDetails)
+            await AuthUtil.disableCognitoUser(accountDetails["username"])
 
             
             return "Secondary User Created Successfully"

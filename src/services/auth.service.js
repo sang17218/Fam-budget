@@ -8,12 +8,14 @@ module.exports.AuthService = class AuthService {
         const cognitoSuccess = false
         try {
             console.log('user details ', userDetails)
+            await DatabaseUtil.getDbConnection()
+            //  const {firstName, lastName, mobile, email, gender, city, title, panCard } = userDetails
+            await AccountHolder.create(userDetails).then( (data) => userDetails["username"] = data["customerId"])
+
             await AuthUtil.adminCreateUser(userDetails)
             await AuthUtil.disableCognitoUser(userDetails.username)
             cognitoSuccess = true
-            await DatabaseUtil.getDbConnection()
-            //  const {firstName, lastName, mobile, email, gender, city, title, panCard } = userDetails
-            await AccountHolder.create(userDetails).then( (data) => userDetails["customerId"] = data["customerId"])
+
             await uploadKycToS3(userDetails)
             return "SUCCESS"
 
@@ -43,7 +45,10 @@ module.exports.AuthService = class AuthService {
                         // accessToken = result.getAccessToken().getJwtToken();
                         // console.log(accessToken) 
                         console.log(result)
-                        resolve({ accessToken: result.getAccessToken().getJwtToken() })
+                        resolve({ success: true,
+                            accessToken: result.getAccessToken().getJwtToken() ,
+                            idToken: result.getIdToken().getJwtToken(),
+                             })
                         // var idToken = result.idToken.jwtToken;
                     },
                     onFailure: function (err) {

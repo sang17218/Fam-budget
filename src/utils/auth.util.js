@@ -1,20 +1,21 @@
 const AWS = require('aws-sdk')
 const CognitoIdentity = require('amazon-cognito-identity-js');
 const { APPLICATION_CONSTANTS } = require('../constants/application.constants');
+const uuid = require('uuid').v4
 module.exports.AuthUtil = class AuthUtil {
   static async adminCreateUser(userDetails) {
     try {
-      const { firstName, lastName, mobile, email, customerId, secondaryId } = userDetails
+      const { firstName, lastName, mobile, username, role, email } = userDetails
 
       var cognitoISP = new AWS.CognitoIdentityServiceProvider();
       var params = {
         UserPoolId: 'us-east-1_FoYGRgTyX', /* required */
-        Username: email, /* required */
+        Username: username, /* required */
         // DesiredDeliveryMediums: [
         //   SMS | EMAIL,
         //   /* more items */
         // ],
-        TemporaryPassword: 'User123@',
+        TemporaryPassword: 'User@1'+ uuid().substr(0,8),
         UserAttributes: [
           {
             Name: 'name',
@@ -30,7 +31,7 @@ module.exports.AuthUtil = class AuthUtil {
           // },
           {
             Name: 'custom:role',
-            Value: 'Primary Account Holder'
+            Value: role
           },
           // {
           //   Name: 'phone_number',

@@ -1,5 +1,5 @@
 const { AccountHolderService } = require("../../services/accountHolder.service")
-
+const { DEFAULT_HEADERS } = require("../../constants/application.constants");
 module.exports.getKycUrl = async function getKycUrl (event){
     try {
       console.log("getKycUrl  api started")
@@ -8,13 +8,15 @@ module.exports.getKycUrl = async function getKycUrl (event){
       console.log("getKycUrl api end")
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
+        body: JSON.stringify(response),
+        headers: DEFAULT_HEADERS
       }
     } catch (error) {
       console.error('getKycUrl error', error)
       return {
         statusCode: 500,
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
+        headers: DEFAULT_HEADERS
       }
     }
 }
