@@ -11,7 +11,7 @@ module.exports.uploadKycToS3 = async function uploadKycToS3(body) {
             const data = await new AWS.S3()
                 .upload({
                     Bucket: 'fambudget-bucket',
-                    Key: `primary-users/${body["customerId"]}/${key}`,
+                    Key: `primary-users/${body["username"]}/${key}`,
                     Body: buff,
                     ContentType: files[ind].fileType ,
                 }).promise().catch( (err) => console.error(err))
