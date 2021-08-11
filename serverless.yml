@@ -277,7 +277,17 @@ functions:
           origin: "*"
           headers:
             - "*"  
-                     
+
+  download_transactions:
+    handler: src/api/reports/downloadTransaction.downloadTransaction
+    events:         
+     - http:
+         path: /transaction/download
+         method: get
+         cors:
+          origin: "*"
+          headers:
+            - "*"                      
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
