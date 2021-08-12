@@ -217,6 +217,16 @@ functions:
          cors:
           origin: "*"
           headers:
+            - "*"            
+  add_funds:
+    handler: src/api/secondaryaccount/addFunds.addFunds
+    events:         
+     - http:
+         path: /secondaryaccount/add/funds
+         method: post
+         cors:
+          origin: "*"
+          headers:
             - "*"              
   disable_primary_account:
     handler: src/api/accountHolder/disableUser.disablePrimaryUser
@@ -291,7 +301,8 @@ functions:
          cors:
           origin: "*"
           headers:
-            - "*"                      
+            - "*"    
+
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

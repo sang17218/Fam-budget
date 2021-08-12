@@ -84,4 +84,49 @@ module.exports.secondaryUserService = class secondaryUserService {
             throw new Error(error)
         }
     }
+    static async addFunds(accountDetails) {
+        try {
+            const accountNumber = accountDetails["accountNumber"];
+            const secondaryId = accountDetails["secondaryId"];
+            const amount = accountDetails["amount"];
+            //let { accountNumber , secondaryId ,amount  } = requestParams
+            if (!accountNumber){
+                throw new Error("Required Params Not Present")
+            } 
+            await DatabaseUtil.getDbConnection()
+            const getBalance = await Account.findOne({
+                where:{
+                    accountNumber: accountNumber,
+                },attributes:['balance' , 'minimumBalance']
+            })
+            if( getBalance.balance>=amount ){
+                const fundsPresent = await SecondaryAccountHolder.findOne({
+                    where: { 
+                        secondaryId: secondaryId,
+                        isActive:true
+                         
+                    },attributes:["fundsAllocated"]
+                })
+                const addFunds = await SecondaryAccountHolder.update({
+                    fundsAllocated: fundsPresent.fundsAllocated+amount},{
+
+                    where:{
+                        accountNumber:accountNumber
+                    }
+                })
+                return "Success"
+
+            }
+            else{
+                 throw new Error("Insufficient Balance")
+            }
+
+            
+            
+            
+        } catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
+    }
 }
