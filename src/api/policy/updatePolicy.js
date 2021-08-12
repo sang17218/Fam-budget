@@ -4,8 +4,8 @@ const { DEFAULT_HEADERS } = require("../../constants/application.constants");
 module.exports.updatePolicy = async function updatePolicy(event){
     try {
       console.log("updatePolicy api started")
-      const requestParams = event["queryStringParameters"];
-      const response = await PolicyService.updatePolicies(requestParams)
+      const body = JSON.parse(event.body)
+      const response = await PolicyService.updatePolicies(body)
       console.log("updatePolicy api end")
       return {
         statusCode: 200,

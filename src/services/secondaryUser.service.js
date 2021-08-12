@@ -56,7 +56,7 @@ module.exports.secondaryUserService = class secondaryUserService {
             await DatabaseUtil.getDbConnection()
             const secondaryId = accountDetails["secondaryId"];
             await SecondaryAccountHolder.update(
-                { isActive: false },
+                { isActive: !accountDetails["isActive"]},
                 { where: { secondaryId: secondaryId, } })
             return "Deleted SUCCESS"
         } catch (error) {

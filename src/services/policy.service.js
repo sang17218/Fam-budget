@@ -51,21 +51,22 @@ module.exports.PolicyService = class PolicyService {
 
     static async updatePolicies(details){
         try {
-            console.log('updatePolicies service ', details)
-            const updateValues = {...details, policyId, accountNumber, customerId}
-            console.log(updateValues)
+            console.log('updatePolicies service ')
             await DatabaseUtil.getDbConnection()
             const checkPrimaryUser = await Account.findOne({
                 where: { customerId:  details["customerId"], accountNumber: details["accountNumber"]},
             })
             if(checkPrimaryUser){
-                return await Policy.update({
-                    updateValues,
-                    where: { policyId: details["policyId"]}
-                })
+                await Policy.update({
+                    expirationDate: details["expirationDate"],
+                    spendLimit: details["spendLimit"]
+                },
+                    { where: { policyId: details["policyId"]}}
+                )
             }else{
                 throw new Error("User details mismatch")
             }
+            return "SUCCESS"
         } catch (error) {
             console.error('updatePolicies error', error)
             throw new Error("FAILURE")
