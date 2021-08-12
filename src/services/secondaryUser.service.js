@@ -1,7 +1,7 @@
 const { DatabaseUtil } = require("../utils/database.util")
 const {Account} = require("../../models/account.model")
 const {SecondaryAccountHolder} = require("../../models/secondaryHolder.model")
-//const { AuthUtil } = require("../utils/auth.util")
+const { AuthUtil } = require("../utils/auth.util")
 
 const {Op} = require("sequelize");
 module.exports.secondaryUserService = class secondaryUserService {
@@ -35,6 +35,7 @@ module.exports.secondaryUserService = class secondaryUserService {
 
             //console.log("Response ",response.secondaryId);
             accountDetails["username"] = response.secondaryId
+            console.log("Username ",accountDetails["username"])
             accountDetails["role"] = 'Secondary-Account-Holder'
             await AuthUtil.adminCreateUser(accountDetails)
             await AuthUtil.disableCognitoUser(accountDetails["username"])
@@ -99,6 +100,7 @@ module.exports.secondaryUserService = class secondaryUserService {
                     accountNumber: accountNumber,
                 },attributes:['balance' , 'minimumBalance']
             })
+            console.log("GETT ",getBalance.balance,amount)
             if( getBalance.balance>=amount ){
                 const fundsPresent = await SecondaryAccountHolder.findOne({
                     where: { 
@@ -111,7 +113,15 @@ module.exports.secondaryUserService = class secondaryUserService {
                     fundsAllocated: fundsPresent.fundsAllocated+amount},{
 
                     where:{
-                        accountNumber:accountNumber
+                        accountNumber:accountNumber,
+                        secondaryId: secondaryId
+                    }
+                })
+                const reduceFunds = await Account.update({
+                    balance: getBalance.balance-amount},{
+
+                    where:{
+                        accountNumber:accountNumber,
                     }
                 })
                 return "Success"
