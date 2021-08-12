@@ -26,18 +26,23 @@ module.exports.PolicyService = class PolicyService {
         try {
             console.log('getPolicies service ', details)
             let response = {}
-
             await DatabaseUtil.getDbConnection()
             const checkPrimaryUser = await Account.findOne({
                 where: { customerId:  details["customerId"], accountNumber: details["accountNumber"]},
             })
             if(checkPrimaryUser){
-                return await Policy.findAll({
+                const users = await Policy.findAll({
                     where: { accountNumber: details["accountNumber"]}
-                })
+                }) || []
+                for(let elt of users){
+                    if(elt["isSecondaryHolder"]){
+                        response[`${elt.secondaryId}`] = elt
+                    }
+                }
             }else{
                 throw new Error("User details mismatch")
             }
+           return response
         } catch (error) {
             console.error('getPolicies error', error)
             throw new Error("FAILURE")

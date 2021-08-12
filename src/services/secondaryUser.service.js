@@ -1,7 +1,7 @@
 const { DatabaseUtil } = require("../utils/database.util")
 const {Account} = require("../../models/account.model")
 const {SecondaryAccountHolder} = require("../../models/secondaryHolder.model")
-//const { AuthUtil } = require("../utils/auth.util")
+const { AuthUtil } = require("../utils/auth.util")
 
 const {Op} = require("sequelize");
 module.exports.secondaryUserService = class secondaryUserService {
