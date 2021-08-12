@@ -6,11 +6,10 @@ module.exports.AuthUtil = class AuthUtil {
   static async adminCreateUser(userDetails) {
     try {
       const { firstName, lastName, mobile, username, role, email } = userDetails
-
       var cognitoISP = new AWS.CognitoIdentityServiceProvider();
       var params = {
         UserPoolId: 'us-east-1_FoYGRgTyX', /* required */
-        Username: username, /* required */
+        Username: String(username), /* required */
         // DesiredDeliveryMediums: [
         //   SMS | EMAIL,
         //   /* more items */
@@ -38,8 +37,8 @@ module.exports.AuthUtil = class AuthUtil {
           //   Value: "+91" + mobile
           // },
           {
-              Name: 'Email verified',
-              Value: true
+              Name: 'email_verified',
+              Value: 'true'
           },
           // {
           //     Name: 'phone_verified',
@@ -56,7 +55,7 @@ module.exports.AuthUtil = class AuthUtil {
         throw new Error("User Already Exists");
       }
       else if(error.code == "InvalidSmsRoleAccessPolicyException"){
-        console.log("SMS COnfiguration exception")
+        console.log("SMS Configuration exception")
       }
       console.log(error)
       // throw new Error(error)
@@ -64,14 +63,14 @@ module.exports.AuthUtil = class AuthUtil {
   }
 
   static async getCognitoUser(username) {
-    console.log('getCognitoUser ', username)
+    console.log('getCognitoUser ', String(username))
     const poolData = {
       UserPoolId: 'us-east-1_FoYGRgTyX',
       ClientId: '3egu3j5t1dck447tl9n0d812cf'
     };
     const userPool = new CognitoIdentity.CognitoUserPool(poolData);
     const userData = {
-      Username: username,
+      Username: String(username),
       Pool: userPool
     };
     console.log('getCognitoUser end')
@@ -102,7 +101,7 @@ module.exports.AuthUtil = class AuthUtil {
     console.log("enableCognitoUser util start");
     const params = {
       UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
-      Username: username,
+      Username: String(username),
     };
     const cognitoISP= new AWS.CognitoIdentityServiceProvider();
     return new Promise((resolve, reject) => {
@@ -127,7 +126,7 @@ module.exports.AuthUtil = class AuthUtil {
     console.log("disableCognitoUser util start");
     const params = {
       UserPoolId:  APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
-      Username: username,
+      Username: String(username),
     };
     const cognitoISP = new AWS.CognitoIdentityServiceProvider();
     return new Promise((resolve, reject) => {
@@ -152,7 +151,7 @@ module.exports.AuthUtil = class AuthUtil {
     console.log("In cognito utility: delete user in cognito ");
     const params = {
       UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
-      Username: username,
+      Username: String(username),
     };
     const cognitoISP = new AWS.CognitoIdentityServiceProvider();
     return new Promise((resolve, reject) => {
@@ -176,7 +175,7 @@ module.exports.AuthUtil = class AuthUtil {
     console.log("addToGroup Auth util start");
     const params = {
       UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
-      Username: username,
+      Username: String(username),
       GroupName: groupName,
     };
     const cognitoISP= new AWS.CognitoIdentityServiceProvider();
@@ -200,7 +199,7 @@ module.exports.AuthUtil = class AuthUtil {
     console.log("removeFromGroup Auth util start");
     const params = {
       UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
-      Username: username,
+      Username: String(username),
       GroupName: groupName,
     };
     const cognitoService = new AWS.CognitoIdentityServiceProvider();
