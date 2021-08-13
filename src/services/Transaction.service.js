@@ -58,7 +58,7 @@ module.exports.TransactionService = class TransactionService{
                     transactionDetails["transactionEndedAt"] = new Date()
                     transactionDetails["isSuccessful"] = true
                     transactionDetails["senderSecondary"] = true
-                    transactionDetails["description"] = "Debited"
+                    // transactionDetails["description"] = "Debited"
 
                     //transactionDetails["accountNumber"] = senderAccountNumber;
 

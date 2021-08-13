@@ -91,7 +91,7 @@ module.exports.CardService = class CardService{
                 if(checkPrimaryUser){
                     response = await Card.findAll({
                         where: {accountNumber: accountDetails["accountNumber"] },
-                        attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod']
+                        attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod', 'accountNumber']
                     })
                 }else{
                     throw new Error("User details mismatch")
@@ -100,7 +100,7 @@ module.exports.CardService = class CardService{
             else if(accountDetails["senderSecondary"]=='true'){
                 response = await Card.findAll({
                     where: {secondaryId: accountDetails["secondaryId"] },
-                    attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod']
+                    attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod', 'accountNumber']
                 })
             }
             return response

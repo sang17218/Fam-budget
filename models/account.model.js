@@ -31,7 +31,7 @@ const Account = sequelize.define('Account', {
   balance: {
     type: DataTypes.FLOAT,
     allowNull: false,
-    defaultValue: 0.00
+    defaultValue: 10000.00
   },
   accountType: {
     type: DataTypes.STRING(255)
@@ -65,7 +65,7 @@ const Account = sequelize.define('Account', {
   actualBalance:{
     type: DataTypes.BIGINT,
     allowNull: false,
-    defaultValue: 0.00
+    defaultValue: 10000.00
   }
   
 },

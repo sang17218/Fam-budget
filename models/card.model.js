@@ -50,6 +50,9 @@ const Card = sequelize.define('Card', {
     pin:{
         type: DataTypes.INTEGER,
         allowNull: true,
+        validate: {
+            len: [3, 5]
+        }
     }
 },
 {

@@ -19,4 +19,22 @@ module.exports.AccountService = class AccountService {
         }
     }
 
+    static async getAccount(accountDetails){
+        try {
+            console.log('account getAccount started')
+            await DatabaseUtil.getDbConnection()
+            const response = await Account.findOne({
+                where: {
+                    accountNumber: accountDetails["accountNumber"],
+                    customerId: accountDetails["customerId"]
+                }
+            })
+            console.log('account getAccount end')
+            return response
+        } catch (error) {
+            console.error('account getAccount error ', error)
+            throw new Error("FAILURE")
+        }
+    }
+
 }

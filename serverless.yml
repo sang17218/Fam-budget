@@ -313,7 +313,37 @@ functions:
           origin: "*"
           headers:
             - "*"    
+  get_account_info:
+    handler: src/api/account/getAccount.getAccount
+    events:         
+     - http:
+         path: /account/get
+         method: get
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
 
+  get_account_holder:
+    handler: src/api/accountHolder/getAccountHolder.getAccountHolder
+    events:         
+     - http:
+         path: /accountHolder/get
+         method: get
+         cors:
+          origin: "*"
+          headers:
+            - "*"        
+  get_kyc_url:
+    handler: src/api/accountHolder/getPresignedUrl.getKycUrl
+    events:         
+     - http:
+         path: /accountHolder/getKycUrl
+         method: get
+         cors:
+          origin: "*"
+          headers:
+            - "*"
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

@@ -50,17 +50,22 @@ module.exports.AccountHolderService = class AccountHolderService {
             const s3 = new AWS.S3();
             const getObject = await s3.listObjects({
                 Bucket:'fambudget-bucket',
-                Prefix: `primary-users/${customerId}/`
+                Prefix: `primary-users/kyc/${customerId}/`
             }).promise()
 
             const files = getObject.Contents
 
             for(let ind=0; ind< files.length; ind+=1){
-                kycUrls.push(await s3.getSignedUrlPromise('getObject', {
+                kycUrls.push(
+                    {
+                        key: files[ind].Key,
+                       url: 
+                        await s3.getSignedUrlPromise('getObject', {
                         Bucket: 'fambudget-bucket',
                         Key: files[ind].Key, //filename
                         Expires: 3600, //time to expire in seconds
-                    }))
+                    })
+                    })
             }
             console.log('generateKycUrl service end')
             return kycUrls
@@ -69,4 +74,22 @@ module.exports.AccountHolderService = class AccountHolderService {
             throw new Error("FAILURE")
         }
     }
+
+    static async getAccountHolder(customerDetails){
+        try {
+            console.log('getAccountHolder started')
+            await DatabaseUtil.getDbConnection()
+            const response = await AccountHolder.findOne({
+                where: {
+                    customerId: customerDetails["customerId"]
+                }
+            })
+            console.log('getAccountHolder end')
+            return response
+        } catch (error) {
+            console.error('getAccountHolder error ', error)
+            throw new Error("FAILURE")
+        }
+    }
+
 }

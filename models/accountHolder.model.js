@@ -17,9 +17,6 @@ const sequelize = new Sequelize({
     primaryKey: true,
     autoIncrement: true 
   },
-  accountNumber: {
-    type: DataTypes.BIGINT,
-  },
   firstName: {
     type: DataTypes.STRING(255),
     allowNull: false
