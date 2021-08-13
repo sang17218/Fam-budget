@@ -30,7 +30,10 @@ const sequelize = new Sequelize({
   },
   email: {
     type: DataTypes.STRING(255),
+    unique: true,
+    isEmail: true,
     allowNull: false
+
     // allowNull defaults to true
   },
   mobile: {
@@ -38,7 +41,8 @@ const sequelize = new Sequelize({
     allowNull: false,
     validate: {
       len: [9, 11]
-    }
+    },
+    unique:true
   },
   gender: {
     type: DataTypes.ENUM("Male","Female","Other")
