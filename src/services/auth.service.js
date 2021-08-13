@@ -3,6 +3,7 @@ const { AccountHolder } = require("../../models/accountHolder.model")
 const { DatabaseUtil } = require("../utils/database.util")
 const CognitoIdentity = require('amazon-cognito-identity-js')
 const { uploadKycToS3 } = require("../utils/s3.util")
+const {Account} = require("../../models/account.model")
 module.exports.AuthService = class AuthService {
     static async signUpUser(userDetails) {
         let cognitoSuccess = false
@@ -41,15 +42,17 @@ module.exports.AuthService = class AuthService {
             // console.log(cognitoUser)
             return new Promise( (resolve, reject) => {
                 cognitoUser.authenticateUser(authenticationDetails, {
-                    onSuccess: function (result) {
-                        // accessToken = result.getAccessToken().getJwtToken();
-                        // console.log(accessToken) 
-                        console.log(result)
+                    onSuccess: async function (result) {
+                        await DatabaseUtil.getDbConnection()
+                        const accountNo = await Account.findOne({
+                            where : { customerId: Number(userDetails["username"])} ,
+                            attributes: ['accountNumber']
+                        })
                         resolve({ success: true,
+                            accountNumber: accountNo,
                             accessToken: result.getAccessToken().getJwtToken() ,
                             idToken: result.getIdToken().getJwtToken(),
                              })
-                        // var idToken = result.idToken.jwtToken;
                     },
                     onFailure: function (err) {
                         reject(err)
