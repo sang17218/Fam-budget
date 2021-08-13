@@ -45,8 +45,9 @@ module.exports.AuthService = class AuthService {
                             where : { customerId: Number(userDetails["username"])} ,
                             attributes: ['accountNumber']
                         })
+                        // console.log("response from db", accountNo)
                         resolve({ success: true,
-                            accountNumber: accountNo,
+                            accountNumber: accountNo.accountNumber,
                             accessToken: result.getAccessToken().getJwtToken() ,
                             idToken: result.getIdToken().getJwtToken(),
                              })
