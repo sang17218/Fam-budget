@@ -46,6 +46,10 @@ const Card = sequelize.define('Card', {
     },
     secondaryId: {
         type: DataTypes.BIGINT,
+    },
+    pin:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
 },
 {

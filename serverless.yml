@@ -259,6 +259,17 @@ functions:
           headers:
             - "*"  
 
+  set_pin:
+    handler: src/api/card/setPin.setPin
+    events:         
+     - http:
+         path: /card/setpin
+         method: post
+         cors:
+          origin: "*"
+          headers:
+            - "*"  
+
   create_policy:
     handler: src/api/policy/createpolicy.createPolicy
     events:         

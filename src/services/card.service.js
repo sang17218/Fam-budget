@@ -46,6 +46,36 @@ module.exports.CardService = class CardService{
             throw new Error("FAILURE")
         }
     }
+    static async setPin(accountDetails) {
+        try {
+            console.log('createCard service ', accountDetails)
+            let response = {}
+            // const { accountHolder, ...account} = {...accountDetails };
+            const expirationDate = new Date()
+            const pin = accountDetails["pin"];
+            const cardNumber = accountDetails["cardNumber"];
+            const accountNumber = accountDetails["accountNumber"]
+            await DatabaseUtil.getDbConnection()
+            if(pin && cardNumber){
+                await Card.update({
+                    pin:pin
+                },{
+                    where:{
+                        accountNumber:accountNumber,
+                        cardNumber:cardNumber
+                    }
+                })
+            }
+            else{
+                throw new Error("Required Params Failed");
+            }
+
+            return "SUCCESS"
+        } catch (error) {
+            console.error(error)
+            throw new Error("FAILURE")
+        }
+    }
 
     static async getCards(accountDetails) {
         try {
