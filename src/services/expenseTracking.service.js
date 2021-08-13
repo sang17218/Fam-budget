@@ -156,7 +156,6 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
                         accountNumber:accountNumber
                     }
                 })
-                console.log("Account ",accountbalance);
                 result["primaryaccount"] = accountbalance
                 result["secondaryaccounts"] = balance;
                 return result;
@@ -189,7 +188,6 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
             const requestParams = event["queryStringParameters"];
     
             let transactions = await TransactionService.getTransactionService(requestParams);
-            console.log("transactions ",transactions);
             transactions.forEach(ticket => {
               worksheet.addRow({
                 transactionID: ticket["transactionID"],//ticket['name']['first_name'] + ticket['name']['last_name'] ? ticket['name']['first_name'] + ' ' + ticket['name']['last_name'] : ' - ',

@@ -22,9 +22,6 @@ module.exports.AuthService = class AuthService {
 
         } catch (error) {
             console.error(error)
-            // if (!cognitoSuccess) {
-            //     await AuthUtil.deleteUser(userDetails.username)
-            // }
             throw new Error(error)
         }
     }
@@ -160,7 +157,7 @@ module.exports.AuthService = class AuthService {
                         // delete userAttributes.email;
                         // delete userAttributes.name
 
-                        console.log(userAttributes)
+                        // console.log(userAttributes)
                         cognitoUser.completeNewPasswordChallenge(
                             user.newPassword,
                             // userAttributes,
@@ -168,10 +165,7 @@ module.exports.AuthService = class AuthService {
                             {
                                 onSuccess: function (result) {
                                     console.log("Temporary Password Reset Success");
-                                    resolve({
-                                        accessToken: result.getAccessToken().getJwtToken(),
-                                        // IdToken: result.getIdToken().getJwtToken();
-                                    });
+                                    resolve("SUCCESS");
                                 },
                                 onFailure: function (err) {
                                     console.error(err);

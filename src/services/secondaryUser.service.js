@@ -35,7 +35,6 @@ module.exports.secondaryUserService = class secondaryUserService {
 
             //console.log("Response ",response.secondaryId);
             accountDetails["username"] = response.secondaryId
-            console.log("Username ",accountDetails["username"])
             accountDetails["role"] = 'Secondary-Account-Holder'
             await AuthUtil.adminCreateUser(accountDetails)
             await AuthUtil.disableCognitoUser(accountDetails["username"])
@@ -49,7 +48,7 @@ module.exports.secondaryUserService = class secondaryUserService {
     }
     static async deleteSecondaryAccountService(accountDetails) {
         try {
-            console.log('secondary account details ', accountDetails)
+            console.log('secondary account details ')
             // const { accountHolder, ...account} = {...accountDetails };
             if (!accountDetails["secondaryId"]){
                 throw new Error("Required Params Not Present")
@@ -67,7 +66,7 @@ module.exports.secondaryUserService = class secondaryUserService {
     }
     static async getSecondaryAccountService(accountDetails) {
         try {
-            console.log('secondary account details ', accountDetails)
+            console.log('secondary account details ')
             // const { accountHolder, ...account} = {...accountDetails };
             if (!accountDetails["accountNumber"]){
                 throw new Error("Required Params Not Present")

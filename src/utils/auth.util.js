@@ -8,7 +8,7 @@ module.exports.AuthUtil = class AuthUtil {
       const { firstName, lastName, mobile, username, role, email } = userDetails
       var cognitoISP = new AWS.CognitoIdentityServiceProvider();
       var params = {
-        UserPoolId: 'us-east-1_FoYGRgTyX', /* required */
+        UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"], /* required */
         Username: String(username), /* required */
         // DesiredDeliveryMediums: [
         //   SMS | EMAIL,
@@ -24,30 +24,18 @@ module.exports.AuthUtil = class AuthUtil {
             Name: 'email',
             Value: email
           },
-          //   {
-          //     Name: 'custom:phone',
-          //     Value: mobile
-          // },
           {
             Name: 'custom:role',
             Value: role
           },
-          // {
-          //   Name: 'phone_number',
-          //   Value: "+91" + mobile
-          // },
           {
               Name: 'email_verified',
               Value: 'true'
           },
-          // {
-          //     Name: 'phone_verified',
-          //     Value: "false"
-          // },
         ],
       };
       await cognitoISP.adminCreateUser(params, function (err, data) {
-        console.log(data);
+        // console.log(data);
       }).promise();
       return "SUCCESS"
     } catch (error) {
@@ -65,8 +53,8 @@ module.exports.AuthUtil = class AuthUtil {
   static async getCognitoUser(username) {
     console.log('getCognitoUser ', String(username))
     const poolData = {
-      UserPoolId: 'us-east-1_FoYGRgTyX',
-      ClientId: '3egu3j5t1dck447tl9n0d812cf'
+      UserPoolId: APPLICATION_CONSTANTS["cognitoConfig"]["userPoolId"],
+      ClientId: APPLICATION_CONSTANTS["cognitoConfig"]["clientId"]
     };
     const userPool = new CognitoIdentity.CognitoUserPool(poolData);
     const userData = {

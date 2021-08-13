@@ -1,10 +1,4 @@
 const { Sequelize } = require('sequelize');
-// const { Account } = require('../../models/account.model');
-// const {AccountHolder} = require('../../models/accountHolder.model')
-// const {Card} = require('../../models/card.model')
-// const {Policy} = require('../../models/policy.model')
-// const {SecondaryAccountHolder} = require('../../models/secondaryHolder.model')
-// const {Transaction} = require('../../models/transaction.model')
 
 module.exports.DatabaseUtil = class DatabaseUtil {
 
@@ -44,14 +38,6 @@ module.exports.DatabaseUtil = class DatabaseUtil {
 
     static async initializeModels() {
         console.log("initializeModels started")
-        // this.sequelize.addModels([
-        //     Account,
-        //     AccountHolder,
-        //     Card,
-        //     Policy,
-        //     SecondaryAccountHolder,
-        //     Transaction
-        // ])
         await this.sequelize.sync();
     }
 

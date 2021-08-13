@@ -15,7 +15,6 @@ module.exports.uploadKycToS3 = async function uploadKycToS3(body) {
                     Body: buff,
                     ContentType: files[ind].fileType ,
                 }).promise().catch( (err) => console.error(err))
-                console.log(data)
         }
         console.log("ended");
         //   return uploadedFile;
