@@ -30,7 +30,10 @@ const sequelize = new Sequelize({
   },
   email: {
     type: DataTypes.STRING(255),
+    unique: true,
+    isEmail: true,
     allowNull: false
+
     // allowNull defaults to true
   },
   mobile: {
