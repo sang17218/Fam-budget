@@ -41,7 +41,8 @@ const sequelize = new Sequelize({
     allowNull: false,
     validate: {
       len: [9, 11]
-    }
+    },
+    unique:true
   },
   gender: {
     type: DataTypes.ENUM("Male","Female","Other")
