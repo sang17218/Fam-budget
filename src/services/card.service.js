@@ -26,20 +26,7 @@ module.exports.CardService = class CardService{
             accountDetails["type"] = accountDetails.type
 
             await DatabaseUtil.getDbConnection()
-            if(accountDetails["customerId"] && accountDetails["senderSecondary"]=='false'){
-                const checkPrimaryUser = await Account.findOne({
-                    where: { customerId:  accountDetails["customerId"] }
-                })
-                if(checkPrimaryUser){
-                    response = await Card.create(accountDetails)
-                }else{
-                    throw new Error("User details mismatch")
-                }
-            }
-            else if(accountDetails["senderSecondary"] == 'true'){
-                response = await Card.create(accountDetails)
-            }
-
+            response = await Card.create(accountDetails)
             return "SUCCESS"
         } catch (error) {
             console.error(error)
@@ -84,25 +71,12 @@ module.exports.CardService = class CardService{
             // const { accountHolder, ...account} = {...accountDetails };
 
             await DatabaseUtil.getDbConnection()
-            if(accountDetails["customerId"] && accountDetails["senderSecondary"]== 'false'){
-                const checkPrimaryUser = await Account.findOne({
-                    where: { customerId:  accountDetails["customerId"] },
-                })
-                if(checkPrimaryUser){
-                    response = await Card.findAll({
+
+            response = await Card.findAll({
                         where: {accountNumber: accountDetails["accountNumber"] },
                         attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod', 'accountNumber']
-                    })
-                }else{
-                    throw new Error("User details mismatch")
-                }
-            }
-            else if(accountDetails["senderSecondary"]=='true'){
-                response = await Card.findAll({
-                    where: {secondaryId: accountDetails["secondaryId"] },
-                    attributes: ['cardNumber', 'type', 'cvv', 'expiryPeriod', 'accountNumber']
-                })
-            }
+            })
+                
             return response
         } catch (error) {
             console.error('getCards error', error)

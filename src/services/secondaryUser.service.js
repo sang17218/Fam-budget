@@ -67,52 +67,71 @@ module.exports.secondaryUserService = class secondaryUserService {
                 }
             })
 
-            const responseFromCreateBundle = await AccountService.createAccountService({
-                phoneNumber: userInfo["mobile"],
-                accountHolderID: responseFromCreateApplication?.data?.individualID
-            })
-
-            console.log('accountNumber ',responseFromCreateBundle?.accounts?.[0]?.accountID, 
-            'applicationId :', responseFromCreateApplication?.data?.applicationID,
-             'customerId: ', responseFromCreateApplication?.data?.individualID,
-              'accountType: ', "PRIMARY_ACCOUNT_HOLDER",
-              'accountHolderID: ', responseFromCreateApplication?.data?.individualID)
-
-            const responseFromAccountInsertion = await Account.create({
-                accountNumber: responseFromCreateBundle?.accounts?.[0]?.accountID,
-                applicationId: responseFromCreateApplication?.data?.applicationID,
-                // customerId: responseFromCreateApplication?.data?.individualID,
-                accountType:"SECONDARY_ACCOUNT_HOLDER"
-            })
-
-            const response = await SecondaryAccountHolder.create({
-                secondaryId:  'aa638102-57cd-4921-b268-30b7b7844347',// responseFromCreateApplication?.data?.individualID,
-                primaryUserAccountNumber:  userInfo["primaryAccount"],
-                relationship:  userInfo["relationship"],
-                isMinor: isMinor,
-            })
-
-            console.log('createSecondaryAccountHolder service end', responseFromAccountInsertion, response)
-            return "SUCCESS"
+            console.log(responseFromCreateApplication?.data)
+            if(responseFromCreateApplication?.data?.status !== 'REJECTED'){
+                const responseFromCreateBundle = await AccountService.createAccountService({
+                    phoneNumber: userInfo["mobile"],
+                    accountHolderID: responseFromCreateApplication?.data?.individualID
+                })
+    
+                console.log('accountNumber ',responseFromCreateBundle?.accounts?.[0]?.accountID, 
+                'applicationId :', responseFromCreateApplication?.data?.applicationID,
+                 'customerId: ', responseFromCreateApplication?.data?.individualID,
+                  'accountType: ', "SECONDARY_ACCOUNT_HOLDER",
+                  'accountHolderID: ', responseFromCreateApplication?.data?.individualID)
+    
+                const responseFromAccountInsertion = await Account.create({
+                    accountNumber: responseFromCreateBundle?.accounts?.[0]?.accountID,
+                    applicationId: responseFromCreateApplication?.data?.applicationID,
+                    // customerId: responseFromCreateApplication?.data?.individualID,
+                    accountType:"SECONDARY_ACCOUNT_HOLDER"
+                })
+    
+                const response = await SecondaryAccountHolder.create({
+                    secondaryId:   responseFromCreateApplication?.data?.individualID,
+                    primaryUserAccountNumber:  userInfo["primaryAccount"],
+                    secondaryUserAccountNumber: responseFromCreateBundle?.accounts?.[0]?.accountID,
+                    relationship:  userInfo["relationship"],
+                    isMinor: isMinor,
+                })
+    
+                console.log('createSecondaryAccountHolder service end')
+                return "SUCCESS"
+            }
+            throw new Error("Application Rejected")
         } catch (error) {
             console.error('error in createSecondaryAccountHolder ', error)
             throw new Error("FAILURE")
         }
     }
 
+    // reports 
     static async getSecondaryAccountService(accountDetails) {
-        // try {
-        //     console.log('secondary account details ', accountDetails)
-        //     const getAllSecondaryAccounts = await SecondaryAccountHolder.findAll({
-        //         where:{
-        //             accountNumber:accountNumber
-        //         }
-        //     })
-        //     return getAllSecondaryAccounts;
-        // } catch (error) {
-        //     console.error(error)
-        //     throw new Error(error)
-        // }
+        try {
+            console.log('secondary account details ', accountDetails)
+            const secondaryUsers = []
+            let getAllSecondaryAccounts = []
+            
+            getAllSecondaryAccounts = await SecondaryAccountHolder.findAll({
+                where:{
+                    primaryUserAccountNumber: accountDetails["primaryUserAccountNumber"]
+                }
+            })
+            for(let ind=0; ind<getAllSecondaryAccounts.length; ind++){
+                const user = await axios.get(`/accountHolders/${getAllSecondaryAccounts[ind]["secondaryId"]}`)
+                secondaryUsers.push({
+                    ...getAllSecondaryAccounts[ind]?.dataValues,
+                    ...user["data"]
+                })
+            }
+
+            // console.log(secondaryUsers)
+            
+            return secondaryUsers;
+        } catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
     }
 
 

@@ -29,6 +29,11 @@ const sequelize = new Sequelize({
         type: DataTypes.STRING,
         allowNull: false
     },
+    // secondary user's account number
+    secondaryUserAccountNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     relationship: {
         type: DataTypes.STRING(255),
         allowNull: false
@@ -53,6 +58,8 @@ const sequelize = new Sequelize({
 });
 
 SecondaryAccountHolder.hasOne(Account, { foreignKey: 'primaryUserAccountNumber' })
+SecondaryAccountHolder.hasOne(Account, {foreignKey: 'secondaryUserAccountNumber'})
+SecondaryAccountHolder.hasOne(Account, { foreignKey: 'accountNumber' })
 // SecondaryAccountHolder.belongsToMany(Transaction, {foreignKey: 'transactionID'})
 // SecondaryAccountHolder.belongsToMany(Card, {foreignKey: 'cardNumber' })
 
