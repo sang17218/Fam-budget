@@ -1,23 +1,19 @@
 //const { AuthUtil } = require("../utils/auth.util")
-const {AccountHolder} = require("../../models/accountHolder.model")
-const uuid  = require("uuid").v4
-
-const {SecondaryAccountHolder} = require("../../models/secondaryHolder.model")
-const {Account} = require("../../models/account.model")
-const {Transaction} = require("../../models/transaction.model")
 const {axiosDefaults} = require('../utils/axios.util')
 const {FUSION_CONSTANTS} = require('../constants/application.constants')
 const {v4} = require('uuid')
 const axios = axiosDefaults()
 
-const {DatabaseUtil} = require("../utils/database.util")
-const {Op} = require("sequelize");
+const { Account } = require("../../models/account.model")
+const { SecondaryAccountHolder } = require("../../models/secondaryHolder.model")
+
 module.exports.TransactionService = class TransactionService{
     static async createTransactionService(transactionDetails){
         try {
             console.log('transaction details ', transactionDetails)
 
             const amount = transactionDetails["amount"]
+            
             const currency = amount.currency;
             const amount2 = amount.amount
             const response = await axios.post(`transfers`, {
@@ -33,6 +29,57 @@ module.exports.TransactionService = class TransactionService{
                 "remarks": "Fund transfer test",
                 "attributes": {}
               })
+            const accountType = transactionDetails["accountType"];
+            const getBalanceForSender = await Account.findOne({
+                    where:{
+                        accountNumber: transactionDetails["debitAccountID"],
+                    },attributes:['balance']
+                })
+            const getBalanceForReciever = await Account.findOne({
+                    where:{
+                        accountNumber: transactionDetails["creditAccountID"],
+                    },attributes:['balance']
+                })
+            await Account.update({
+                             balance:getBalanceForSender.balance-amount},
+                             {where : {
+                              accountNumber:transactionDetails["debitAccountID"],
+                             }
+                         })
+            await Account.update({
+                            balance:getBalanceForReciever.balance+amount},
+                            {where : {
+                             accountNumber:transactionDetails["creditAccountID"],
+                            }
+                        })
+            if(accountType == "SECONDARY_ACCOUNT_HOLDER"){
+                const getBalanceForSender = await SecondaryAccountHolder.findOne({
+                    where:{
+                        secondaryUserAccountNumber: transactionDetails["debitAccountID"],
+                    },attributes:['fundsSpend','secondaryUserAccountNumber']
+                }).then(()=>{
+                    await SecondaryAccountHolder.update({
+                        fundsSpent:getBalanceForSender.fundsSpend-amount},
+                        {where : {
+                        accountNumber:transactionDetails["debitAccountID"],
+                        }
+                    })
+                })
+                const getBalanceForReciever = await SecondaryAccountHolder.findOne({
+                        where:{
+                            secondaryUserAccountNumber: transactionDetails["creditAccountID"],
+                        },attributes:['fundsSpend','secondaryUserAccountNumber']
+                    }).then(()=>{
+                        await SecondaryAccountHolder.update({
+                            fundsSpent:getBalanceForReciever.fundsSpend+amount},
+                            {where : {
+                            accountNumber:transactionDetails["creditAccountID"],
+                            }
+                        })    
+                    })
+
+                
+        }
             return response.data;
 
 
@@ -133,6 +180,8 @@ module.exports.TransactionService = class TransactionService{
                     pageSize: pageSize
                 }
               });
+            //while(response)
+            console.log("Response ",response.data);
             return response.data;
             
         } catch (error) {
