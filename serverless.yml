@@ -63,10 +63,10 @@ environment:
 
 functions:
   signup:
-    handler: src/api/auth/signup.signUp
+    handler: src/api/accountHolder/createPrimaryHolder.primarySignUp
     events:
      - http:
-         path: /auth/signup
+         path: /primaryuser/signup
          method: post
          cors:
           origin: "*"
