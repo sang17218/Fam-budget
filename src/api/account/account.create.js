@@ -4,7 +4,7 @@ module.exports.createAccount= async function createAccount(event){
     const body = JSON.parse(event.body)
     try {
       console.log("createAccount api started")
-      const response = await AccountService.createAccountService(body)
+      const response = await AccountService.createPrimaryAccountService(body)
       console.log("createAccount api end")
       return {
         statusCode: 200,

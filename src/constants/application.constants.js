@@ -15,5 +15,6 @@ module.exports.DEFAULT_HEADERS = {
   };
 
 module.exports.FUSION_CONSTANTS = {
-    ifiID: 140793
+    ifiID: 140793,
+    bundleID: 'c00c61a3-0570-40d2-8582-7d3fcdd53108'
 }
