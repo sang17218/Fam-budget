@@ -1,6 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const {Card} = require('../models/card.model')
-const {Transaction} = require('../models/transaction.model')
 const {Account} = require("./account.model")
 const sequelize = new Sequelize({
     "username": "admin",
@@ -22,74 +20,18 @@ const sequelize = new Sequelize({
     
 
     secondaryId: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-        validate: {
-            len: [9, 11]
-        },
-        primaryKey: true,
-        autoIncrement: true 
-    },
-    accountNumber: {
-        type: DataTypes.BIGINT,
-        allowNull: false
-    },
-    firstName: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    lastName: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING(255),
-        unique:true,
-        isEmail: true,
-        allowNull: false
-        // allowNull defaults to true
-    },
-    mobile: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            len: [9,11]
-        },
-        unique:true
+        primaryKey: true,
     },
-    gender: {
-        type: DataTypes.ENUM("Male", "Female", "Other")
-        // allowNull defaults to true
+    // primary user's account number
+    primaryUserAccountNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     relationship: {
         type: DataTypes.STRING(255),
         allowNull: false
-    },
-    isKycVerified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    bcity: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    panNumber: {
-        type: DataTypes.STRING,
-        allowNull: false
-
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: new Date(),
-        allowNull: false
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
     },
     isMinor: {
         type: DataTypes.BOOLEAN,
@@ -110,7 +52,7 @@ const sequelize = new Sequelize({
     timestamps: false
 });
 
-SecondaryAccountHolder.hasOne(Account, { foreignKey: 'accountNumber' })
+SecondaryAccountHolder.hasOne(Account, { foreignKey: 'primaryUserAccountNumber' })
 // SecondaryAccountHolder.belongsToMany(Transaction, {foreignKey: 'transactionID'})
 // SecondaryAccountHolder.belongsToMany(Card, {foreignKey: 'cardNumber' })
 
