@@ -317,7 +317,7 @@ functions:
     handler: src/api/account/getAccount.getAccount
     events:         
      - http:
-         path: /account/get
+         path: /account/get/{accountID}
          method: get
          cors:
           origin: "*"
