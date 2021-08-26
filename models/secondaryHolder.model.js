@@ -1,6 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const {Card} = require('../models/card.model')
-const {Transaction} = require('../models/transaction.model')
 const {Account} = require("./account.model")
 const sequelize = new Sequelize({
     "username": "admin",
@@ -14,14 +12,25 @@ const sequelize = new Sequelize({
  const SecondaryAccountHolder = sequelize.define('SecondaryAccountHolder', {
     // Model attributes are defined here
 
+    //   customerId: {
+    //     type: DataTypes.INTEGER,
+    //     primaryKey: true,
+    //     autoIncrement: true 
+    //   },
+    
+
     secondaryId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true 
     },
-    accountNumber: {
-        type: DataTypes.BIGINT,
+    // primary user's account number
+    primaryUserAccountNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    relationship: {
+        type: DataTypes.STRING(255),
         allowNull: false
     },
     isMinor: {
@@ -43,7 +52,7 @@ const sequelize = new Sequelize({
     timestamps: false
 });
 
-SecondaryAccountHolder.hasOne(Account, { foreignKey: 'accountNumber' })
+SecondaryAccountHolder.hasOne(Account, { foreignKey: 'primaryUserAccountNumber' })
 // SecondaryAccountHolder.belongsToMany(Transaction, {foreignKey: 'transactionID'})
 // SecondaryAccountHolder.belongsToMany(Card, {foreignKey: 'cardNumber' })
 

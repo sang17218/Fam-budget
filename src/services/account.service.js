@@ -11,7 +11,7 @@ const randGenerator = random.generator({
     integer: true
 })
 module.exports.AccountService = class AccountService {
-    static async createPrimaryAccountService(accountDetails) {
+    static async createAccountService(accountDetails) {
         try {
             console.log("Inside Account Service")
             const response = await axios.post(`bundles/${FUSION_CONSTANTS.bundleID}/issueBundle`, {
@@ -19,7 +19,7 @@ module.exports.AccountService = class AccountService {
                 "name": `Fampaywalletbundle9adcf36`,
                 "phoneNumber": accountDetails["phoneNumber"],
             })
-            return "SUCCESS"
+            return response?.data
         } catch (error) {
             console.error(error)
             throw new Error("FAILURE")

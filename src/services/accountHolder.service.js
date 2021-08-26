@@ -1,5 +1,5 @@
 const { DatabaseUtil } = require("../utils/database.util")
-const { AccountHolder } = require("../../models/accountHolder.model")
+const { Account } = require("../../models/account.model")
 const { AuthUtil } = require("../utils/auth.util")
 const {axiosDefaults} = require('../utils/axios.util')
 const {FUSION_CONSTANTS} = require('../constants/application.constants')
@@ -7,6 +7,7 @@ const {v4} = require('uuid')
 const axios = axiosDefaults()
 
 const AWS = require("aws-sdk")
+const { AccountService } = require("./account.service")
 
 module.exports.AccountHolderService= class AccountHolderService {
 
@@ -15,7 +16,7 @@ module.exports.AccountHolderService= class AccountHolderService {
             console.log('createPrimaryAccountHolder started ', userInfo)
             const dob = new Date(userInfo["dob"])
             
-            const response = await axios.post('applications/newIndividual', {
+            const responseFromCreateApplication = await axios.post('applications/newIndividual', {
                 "ifiID": FUSION_CONSTANTS.ifiID,
                 "formID": `fam-budget-${v4().slice(0,5)}`,
                 // "spoolID": "123",
@@ -53,10 +54,30 @@ module.exports.AccountHolderService= class AccountHolderService {
                     }
                 ],
                 // "pops": [],
-                "customFields": {}
+                "customFields": {
+                    actualBalance: 0.0,
+                    secondaryUserIds: []
+                }
             })
 
-            console.log(response)
+            const responseFromCreateBundle = await AccountService.createAccountService({
+                phoneNumber: userInfo["mobile"],
+                accountHolderID: responseFromCreateApplication?.data?.individualID
+            })
+
+            console.log('accountNumber ',responseFromCreateBundle?.accounts?.[0]?.accountID, 
+            'applicationId :', responseFromCreateApplication?.data?.applicationID,
+             'customerId: ', responseFromCreateApplication?.data?.individualID,
+              'accountType: ', "PRIMARY_ACCOUNT_HOLDER",
+              'accountHolderID: ', responseFromCreateApplication?.data?.individualID)
+
+            const response = await Account.create({
+                accountNumber: responseFromCreateBundle?.accounts?.[0]?.accountID,
+                applicationId: responseFromCreateApplication?.data?.applicationID,
+                customerId: responseFromCreateApplication?.data?.individualID,
+                accountType: "PRIMARY_ACCOUNT_HOLDER"
+            })
+
             return "SUCCESS"
         } catch (error) {
             console.error('error in createPrimaryAccountHolder ', error)
@@ -66,7 +87,7 @@ module.exports.AccountHolderService= class AccountHolderService {
 
     static async getPrimaryAccountHolderDetails(userInfo){
         try {
-            console.log('getPrimaryAccountHolderDetails started ', userInfo)
+            // console.log('getPrimaryAccountHolderDetails started ', userInfo)
             const response = await axios.get(`/accountHolders/${userInfo["accountHolderId"]}`)
             // console.log(response.data)
             console.log('getPrimaryAccountHolderDetails end')
@@ -76,62 +97,6 @@ module.exports.AccountHolderService= class AccountHolderService {
             throw new Error("FAILURE")           
         }
     }
-
-    static async createSecondaryAccountHolder(userInfo) {
-        try {
-            console.log('createSecondaryAccountHolder started ', userInfo)
-            const dob = new Date(userInfo["dob"])
-            
-            const response = await axios.post('applications/newIndividual', {
-                "ifiID": FUSION_CONSTANTS.ifiID,
-                "formID": `fam-budget-secondary-${v4().slice(0,5)}`,
-                // "spoolID": "123",
-                "individualType": "REAL",
-                "salutation": userInfo["salutation"],
-                "firstName": userInfo["firstName"],
-                "lastName": userInfo["lastName"],
-
-                "applicationType": "SECONDARY_ACCOUNT_HOLDER",
-                "dob": {
-                    "year": dob.getFullYear(),
-                    "month": dob.getMonth()+1,
-                    "day": dob.getDate()
-                },
-                "gender": userInfo["gender"],
-                "kycDetails": {
-                    "kycStatus": "MINIMAL",
-                    "kycStatusPostExpiry": "string",
-                    "kycAttributes": {},
-                    "authData": {
-                        "AADHAAR": userInfo["adhaarId"]
-                    },
-                    "authType": "AADHAAR"
-                },
-                "vectors": [
-                    {
-                        "type": "p",
-                        "value": userInfo["mobile"],
-                        "isVerified": true
-                    },
-                    {
-                        "type": "e",
-                        "value": userInfo["email"],
-                        "isVerified": true
-                    }
-                ],
-                // "pops": [],
-                "customFields": {
-                }
-            })
-            console.log('createSecondaryAccountHolder service end', response)
-            return "SUCCESS"
-        } catch (error) {
-            console.error('error in createSecondaryAccountHolder ', error)
-            throw new Error("FAILURE")
-        }
-    }
-
-
 
 
 
