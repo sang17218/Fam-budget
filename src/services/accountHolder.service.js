@@ -53,15 +53,80 @@ module.exports.AccountHolderService= class AccountHolderService {
                     }
                 ],
                 // "pops": [],
-                "customFields": {
-                    
-                }
+                "customFields": {}
             })
 
             console.log(response)
             return "SUCCESS"
         } catch (error) {
             console.error('error in createPrimaryAccountHolder ', error)
+            throw new Error("FAILURE")
+        }
+    }
+
+    static async getPrimaryAccountHolderDetails(userInfo){
+        try {
+            console.log('getPrimaryAccountHolderDetails started ', userInfo)
+            const response = await axios.get(`/accountHolders/${userInfo["accountHolderId"]}`)
+            // console.log(response.data)
+            console.log('getPrimaryAccountHolderDetails end')
+            return response.data
+        } catch (error) {
+            console.error('error in getPrimaryAccountHolderDetails ', error)
+            throw new Error("FAILURE")           
+        }
+    }
+
+    static async createSecondaryAccountHolder(userInfo) {
+        try {
+            console.log('createSecondaryAccountHolder started ', userInfo)
+            const dob = new Date(userInfo["dob"])
+            
+            const response = await axios.post('applications/newIndividual', {
+                "ifiID": FUSION_CONSTANTS.ifiID,
+                "formID": `fam-budget-secondary-${v4().slice(0,5)}`,
+                // "spoolID": "123",
+                "individualType": "REAL",
+                "salutation": userInfo["salutation"],
+                "firstName": userInfo["firstName"],
+                "lastName": userInfo["lastName"],
+
+                "applicationType": "SECONDARY_ACCOUNT_HOLDER",
+                "dob": {
+                    "year": dob.getFullYear(),
+                    "month": dob.getMonth()+1,
+                    "day": dob.getDate()
+                },
+                "gender": userInfo["gender"],
+                "kycDetails": {
+                    "kycStatus": "MINIMAL",
+                    "kycStatusPostExpiry": "string",
+                    "kycAttributes": {},
+                    "authData": {
+                        "AADHAAR": userInfo["adhaarId"]
+                    },
+                    "authType": "AADHAAR"
+                },
+                "vectors": [
+                    {
+                        "type": "p",
+                        "value": userInfo["mobile"],
+                        "isVerified": true
+                    },
+                    {
+                        "type": "e",
+                        "value": userInfo["email"],
+                        "isVerified": true
+                    }
+                ],
+                // "pops": [],
+                "customFields": {
+                }
+            })
+            console.log('createSecondaryAccountHolder service end', response)
+            return "SUCCESS"
+        } catch (error) {
+            console.error('error in createSecondaryAccountHolder ', error)
             throw new Error("FAILURE")
         }
     }

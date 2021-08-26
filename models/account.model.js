@@ -19,45 +19,11 @@ const Account = sequelize.define('Account', {
     type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true ,
-    validate: {
-        len: [9,11],
-      }
-  },
-  branch: {
-    type: DataTypes.STRING(255),
-    allowNull:false
   },
   balance: {
     type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue: 10000.00
-  },
-  accountType: {
-    type: DataTypes.STRING(255)
-  },
-  minimumBalance: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-    defaultValue:0.00
-  },
-  bcity: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  },
-  isActive : {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: new Date()
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: true,
   },
   customerId: {
     type: DataTypes.BIGINT,

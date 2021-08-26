@@ -16,62 +16,8 @@ const sequelize = new Sequelize({
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true 
-  },
-  firstName: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  },
-  lastName: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING(255),
-    unique: true,
-    isEmail: true,
-    allowNull: false
+  }
 
-    // allowNull defaults to true
-  },
-  mobile: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      len: [9, 11]
-    },
-    unique:true
-  },
-  gender: {
-    type: DataTypes.ENUM("Male","Female","Other")
-    // allowNull defaults to true
-  },
-  isKycVerified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  bcity: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  },
-  panNumber: {
-    type: DataTypes.STRING,
-    allowNull: false
-
-  },
-  isActive: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: new Date(),
-    allowNull: false
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-  },
- 
 }, {
     tableName: 'AccountHolder',
     timestamps: false
