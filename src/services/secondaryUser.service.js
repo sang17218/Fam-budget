@@ -25,7 +25,7 @@ module.exports.secondaryUserService = class secondaryUserService {
                 "formID": `fam-budget-secondary-${v4().slice(0,5)}`,
                 // "spoolID": "123",
                 "individualType": "REAL",
-                "salutation": userInfo["salutation"],
+                // "salutation": userInfo["salutation"],
                 "firstName": userInfo["firstName"],
                 "lastName": userInfo["lastName"],
 
@@ -59,7 +59,7 @@ module.exports.secondaryUserService = class secondaryUserService {
                 ],
                 // "pops": [],
                 "customFields": {
-                    fundsAllocated: userInfo["fundsAllocated"], 
+                    fundsAllocated: 0, 
                     isMinor: isMinor,
                     primaryAccountHolderId: userInfo["primaryAccountHolderId"],
                     primaryAccount: userInfo["primaryAccount"],
