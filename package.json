@@ -4,7 +4,9 @@
   "description": "Fam-budget",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sls offline -s offline",
+    "deploy:dev": "sls deploy -r us-east-1 -s dev"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,20 @@
   },
   "homepage": "https://github.com/sang17218/Fam-budget#readme",
   "dependencies": {
-    "sequelize": "^6.6.5"
+    "amazon-cognito-identity-js": "^5.0.6",
+    "aws-sdk": "^2.958.0",
+    "axios": "^0.21.1",
+    "exceljs": "^4.2.1",
+    "jszip": "^3.7.1",
+    "mysql2": "^2.2.5",
+    "random-number": "0.0.9",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0",
+    "serverless": "^2.53.1",
+    "stream": "0.0.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.0.0"
   }
 }
