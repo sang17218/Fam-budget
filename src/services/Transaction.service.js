@@ -1,192 +1,203 @@
 //const { AuthUtil } = require("../utils/auth.util")
-const {AccountHolder} = require("../../models/accountHolder.model")
-const uuid  = require("uuid").v4
+const {axiosDefaults} = require('../utils/axios.util')
+const {FUSION_CONSTANTS} = require('../constants/application.constants')
+const {v4} = require('uuid')
+const axios = axiosDefaults()
 
-const {SecondaryAccountHolder} = require("../../models/secondaryHolder.model")
-const {Account} = require("../../models/account.model")
-const {Transaction} = require("../../models/transaction.model")
+const { Account } = require("../../models/account.model")
+const { SecondaryAccountHolder } = require("../../models/secondaryHolder.model")
 
-const {DatabaseUtil} = require("../utils/database.util")
-const {Op} = require("sequelize");
 module.exports.TransactionService = class TransactionService{
     static async createTransactionService(transactionDetails){
+        let response
         try {
             console.log('transaction details ', transactionDetails)
 
-            // if(userDetails["panCard"])
-             await DatabaseUtil.getDbConnection()
-
-            const { senderAccountNumber , receiverAccountNumber, amount , secondaryId }  = transactionDetails
-            console.log("Amount ",amount)
-            const getBalance = await Account.findOne({
-                where:{
-                    accountNumber: senderAccountNumber,
-                },attributes:['balance' , 'minimumBalance']
-            })
-            if (!getBalance){
-                throw  new Error("Account Not Found")
-            }
-            if (secondaryId){
-                const fundsPresent = await SecondaryAccountHolder.findOne({
-                    where: { 
-                        secondaryId: secondaryId,
-                        fundsAllocated:{
-                            [Op.gte]: amount,
-                        },
-                        isActive:true
-                         
-                    },attributes:["fundsAllocated"]
+            const amount = transactionDetails["amount"]
+            
+            const currency = amount.currency;
+            const amount2 = amount.amount
+            response = await axios.post(`transfers`, {
+                "requestID": v4(),//"8439oknhvutcvh44429ut",
+                "amount": {
+                  "currency": currency,
+                  "amount": amount2
+                },
+                "transferCode": "ATLAS_P2M_AUTH",
+                "debitAccountID": transactionDetails["debitAccountID"], //"4a48c784-dfdb-4b43-86f6-7d875bbd751d",
+                "creditAccountID": transactionDetails["creditAccountID"], // "31f1e723-17a4-496c-ba51-da4be3c927fb",
+                "transferTime": 1574741608000,
+                "remarks": transactionDetails["remarks"] || "Fund transfer test",
+                "attributes": {}
+              })
+            
+            console.log("response ", response?.data)
+            const accountType = transactionDetails["accountType"];
+            const getBalanceForSender = await Account.findOne({
+                    where:{
+                        accountNumber: transactionDetails["debitAccountID"],
+                    },attributes:['balance']
                 })
-                if( !fundsPresent){
-                    throw  new Error("Insufficient Funds")
-                }
-                console.log("Funds are Present", fundsPresent)
-                const secTrans = await SecondaryAccountHolder.update({
-                    fundsAllocated: fundsPresent.fundsAllocated-amount},
-                    {
-                        where : {
-                            secondaryId:secondaryId
-                       } 
-                    })
-                    await Account.update({
-                        balance:getBalance.balance-amount},
-                        {where : {
-                         accountNumber:senderAccountNumber
-                        }
-                    })
-                    transactionDetails["transactionID"] = uuid();
-                    transactionDetails["transactionEndedAt"] = new Date()
-                    transactionDetails["isSuccessful"] = true
-                    transactionDetails["senderSecondary"] = true
-                    // transactionDetails["description"] = "Debited"
+            const getBalanceForReciever = await Account.findOne({
+                    where:{
+                        accountNumber: transactionDetails["creditAccountID"],
+                    },attributes:['balance']
+                })
 
-                    //transactionDetails["accountNumber"] = senderAccountNumber;
-
-                    console.log("Transactions  ",transactionDetails)
-                    await Transaction.create(transactionDetails)
-
-                return "SUCCESS"
-
-
-
-            }
-            else{
-                console.log("inside account ");
-                if(getBalance && ((getBalance.balance)-amount)>getBalance.minimumBalance){
-                    
-                   await Account.update({
-                       balance:getBalance.balance-amount},
-                       {where : {
-                        accountNumber:senderAccountNumber
-                       }
-                   })
-                    transactionDetails["transactionID"] = uuid();
-                    transactionDetails["transactionEndedAt"] = new Date()
-                    transactionDetails["isSuccessful"] = true
-                    transactionDetails["senderSecondary"] = true
-                    transactionDetails["description"] = "Debited"
-                    await Transaction.create(transactionDetails)
-                    
-                }
-                else{
-                    throw  new Error("Transaction Failed due to Insufficient Balance")
-                }
-                return "SUCCESS"
+            if(getBalanceForSender && getBalanceForSender?.balance >= 0){
+                const sender = await Account.update({
+                    balance: getBalanceForSender.balance - amount2},
+                    {where : {
+                     accountNumber:transactionDetails["debitAccountID"],
+                    }
+                }).then( (res) => console.log(res)).catch( (err) => console.error("error in send ", err))
             }
             
+            if(getBalanceForReciever && getBalanceForReciever?.balance >= 0){
+                const receiver = await Account.update({
+                    balance: getBalanceForReciever?.balance+amount2},
+                    {where : {
+                     accountNumber:transactionDetails["creditAccountID"],
+                    }
+                }).then((res) => console.log("hi ", res))
+    
+            }
+           
+
+            if(accountType == "SECONDARY_ACCOUNT_HOLDER"){
+                const getBalanceForSender = await SecondaryAccountHolder.findOne({
+                    where:{
+                        secondaryUserAccountNumber: transactionDetails["debitAccountID"],
+                    },attributes:['fundsSpend','secondaryUserAccountNumber', 'fundsAllocated']
+                }).then(async()=>{
+                    await SecondaryAccountHolder.update({
+                        fundsSpent:getBalanceForSender.fundsSpend+amount},
+                        {where : {
+                        accountNumber:transactionDetails["debitAccountID"],
+                        }
+                    })
+                })
+                const getBalanceForReciever = await SecondaryAccountHolder.findOne({
+                        where:{
+                            secondaryUserAccountNumber: transactionDetails["creditAccountID"],
+                        },attributes:['fundsSpend','secondaryUserAccountNumber', 'fundsAllocated']
+                    }).then(async()=>{
+                        await SecondaryAccountHolder.update({
+                            fundsSpent:getBalanceForReciever.fundsAllocated+amount},
+                            {where : {
+                            accountNumber:transactionDetails["creditAccountID"],
+                            }
+                        })    
+                    })
+
+                
+        }
+            return response.data;
+
+
+            // // if(userDetails["panCard"])
+            //  await DatabaseUtil.getDbConnection()
+
+            // const { senderAccountNumber , receiverAccountNumber, amount , secondaryId }  = transactionDetails
+            // console.log("Amount ",amount)
+            // const getBalance = await Account.findOne({
+            //     where:{
+            //         accountNumber: senderAccountNumber,
+            //     },attributes:['balance' , 'minimumBalance']
+            // })
+            // if (!getBalance){
+            //     throw  new Error("Account Not Found")
+            // }
+            // if (secondaryId){
+            //     const fundsPresent = await SecondaryAccountHolder.findOne({
+            //         where: { 
+            //             secondaryId: secondaryId,
+            //             fundsAllocated:{
+            //                 [Op.gte]: amount,
+            //             },
+            //             isActive:true
+                         
+            //         },attributes:["fundsAllocated"]
+            //     })
+            //     if( !fundsPresent){
+            //         throw  new Error("Insufficient Funds")
+            //     }
+            //     console.log("Funds are Present", fundsPresent)
+            //     const secTrans = await SecondaryAccountHolder.update({
+            //         fundsAllocated: fundsPresent.fundsAllocated-amount},
+            //         {
+            //             where : {
+            //                 secondaryId:secondaryId
+            //            } 
+            //         })
+            //         await Account.update({
+            //             balance:getBalance.balance-amount},
+            //             {where : {
+            //              accountNumber:senderAccountNumber
+            //             }
+            //         })
+            //         transactionDetails["transactionID"] = uuid();
+            //         transactionDetails["transactionEndedAt"] = new Date()
+            //         transactionDetails["isSuccessful"] = true
+            //         transactionDetails["senderSecondary"] = true
+            //         // transactionDetails["description"] = "Debited"
+
+            //         //transactionDetails["accountNumber"] = senderAccountNumber;
+
+            //         console.log("Transactions  ",transactionDetails)
+            //         await Transaction.create(transactionDetails)
+
+            //     return "SUCCESS"
+
+
+
+            // }
+            // else{
+            //     console.log("inside account ");
+            //     if(getBalance && ((getBalance.balance)-amount)>getBalance.minimumBalance){
+                    
+            //        await Account.update({
+            //            balance:getBalance.balance-amount},
+            //            {where : {
+            //             accountNumber:senderAccountNumber
+            //            }
+            //        })
+            //         transactionDetails["transactionID"] = uuid();
+            //         transactionDetails["transactionEndedAt"] = new Date()
+            //         transactionDetails["isSuccessful"] = true
+            //         transactionDetails["senderSecondary"] = true
+            //         transactionDetails["description"] = "Debited"
+            //         await Transaction.create(transactionDetails)
+                    
+            //     }
+            //     else{
+            //         throw  new Error("Transaction Failed due to Insufficient Balance")
+            //     }
+            //     return "SUCCESS"
+            // }
+            
         } catch (error) {
+            // if(response?.data){
+            //     return response.data
+            // }
             console.error(error)
             throw new Error(error)
         }
     }
-    static async getTransactionService(requestPayload){
+    static async getTransactionService(accountID,requestPayload){
         try {
-            console.log('user details ', requestPayload)
-            // if(userDetails["panCard"])
-            await DatabaseUtil.getDbConnection();
-            let {accountNumber,secondaryId , customerId,startDate,endDate,transactionType} = requestPayload
-            
-            startDate = startDate ? startDate : '1970-01-01'
-            const currDate = new Date();
-            endDate = endDate ? endDate : new Date()//+ ' 18:29:59' : currDate.toISOString().split('T')[0] + ' ' + currDate.toTimeString().split(' ')[0];
-            console.log("STARTDATA ",startDate,endDate);
-            let where;
-                if(transactionType ){ //If transaction type is present
-                    if(transactionType=="credit"){
-                        where = {
-                            senderAccountNumber: accountNumber,
-                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
-
-                        }
-                    }
-                    else if(transactionType=="debit"){
-                        where = {
-                            receiverAccountNumber: accountNumber,
-                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
-
-                        }
-
-                    }
-                    else{
-                        where = {
-                            [Op.or]:[{senderAccountNumber: accountNumber}, {receiverAccountNumber: accountNumber}],
-                            transactionStartedAt: { [Op.between]: [startDate, endDate] }
-
-                        }
-
-                    }
+            //console.log('user details ', requestPayload)
+            const pageNumber= requestPayload["pageNumber"];//1;
+            const pageSize = requestPayload["pageSize"];//5
+            const response = await axios.get(`accounts/${accountID}/transactions`, {
+                params: {
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
                 }
-                else{
-                    where = {
-                        [Op.or]:[{senderAccountNumber: accountNumber}, {receiverAccountNumber: accountNumber}],
-                        transactionStartedAt: { [Op.between]: [startDate, endDate] }
-
-                    }
-                }
-            if(secondaryId){
-                
-                const secondaryUserTransaction = await SecondaryAccountHolder.findAll({
-                    where: { 
-                        secondaryId: secondaryId,
-                        createdAt: { [Op.between]: [startDate, endDate] },
-                        isActive: false         
-                    }
-                })
-                if(!secondaryUserTransaction){
-                    throw new Error("Invalid Account Info") 
-                }
-                const GetTransactions = await Transaction.findAll({
-                    where: where
-                })
-                    return GetTransactions
-
-                //console.log("PrimaryUser Transaction ",primaryUserTransaction);
-            }
-            else{
-                const checkForPrimaryUser = Account.findOne({
-                    where:{
-                        customerId:customerId
-                    }
-                })
-                if(!checkForPrimaryUser){
-                    throw new Error("Not a Primary User")
-                }
-                const primaryUserTransaction = await Account.findAll({
-                    where:{
-                        accountNumber: accountNumber,
-                    }
-                })
-
-                if(!primaryUserTransaction){
-                    throw new Error("Invalid Account Info") 
-                }
-                
-                const GetTransactions = await Transaction.findAll({
-                    where: where
-                })
-                    return GetTransactions
-
-            }    
+              });
+            //while(response)
+            console.log("Response ",response.data);
+            return response.data;
             
         } catch (error) {
             console.error(error)

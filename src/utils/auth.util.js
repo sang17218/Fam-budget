@@ -39,10 +39,11 @@ module.exports.AuthUtil = class AuthUtil {
       }).promise();
       return "SUCCESS"
     } catch (error) {
-      if (error.code == "UsernameExistsException") {
-        throw new Error("User Already Exists");
-      }
-      else if(error.code == "InvalidSmsRoleAccessPolicyException"){
+      // if (error.code == "UsernameExistsException") {
+      //   throw new Error("User Already Exists");
+      // }
+      // else 
+      if(error.code == "InvalidSmsRoleAccessPolicyException"){
         console.log("SMS Configuration exception")
       }
       console.log(error)

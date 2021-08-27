@@ -88,7 +88,7 @@ functions:
     handler: src/api/transaction/getTransaction.getTransaction
     events:
       - http:
-          path: /transaction/getTransaction
+          path: /transaction/getTransaction/{accountID}
           method: get
           cors:
             origin: "*"

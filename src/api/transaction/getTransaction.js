@@ -5,8 +5,9 @@ module.exports.getTransaction = async function getTransaction(event){
     //const requestParams = event["queryStringParameters"];
     try {
         console.log("get Transaction started")
-        const requestParams = event["queryStringParameters"];
-        const response = await TransactionService.getTransactionService(requestParams)
+        const requestPayload = event["queryStringParameters"];
+        const requestParams = event.pathParameters.accountID;
+        const response = await TransactionService.getTransactionService(requestParams,requestPayload)
         console.log("get Transaction ended")
 
         return {

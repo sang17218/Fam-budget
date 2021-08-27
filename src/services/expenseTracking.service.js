@@ -1,54 +1,72 @@
 const { DatabaseUtil } = require("../utils/database.util")
-const {Transaction} = require("../../models/transaction.model")
 const ExcelJS = require('exceljs');
 const {Op} = require("sequelize");
 const uuid = require("uuid").v4
-const { SecondaryAccountHolder } = require("../../models/secondaryHolder.model");
-const { Account } = require("../../models/account.model");
+// const { SecondaryAccountHolder } = require("../../models/secondaryHolder.model");
+// const { Account } = require("../../models/account.model");
 const { TransactionService } = require("./Transaction.service");
+const {axiosDefaults} = require('../utils/axios.util')
+const {FUSION_CONSTANTS} = require('../constants/application.constants')
+const {v4} = require('uuid')
+const axios = axiosDefaults()
 const Stream = require('stream');
 const AWS = require("aws-sdk")
+
 
  
 module.exports.ExpenseTrackingService = class ExpenseTrackingService {
     static async getMonthlyOverview(event) {
         try {
             const requestParams = event["queryStringParameters"];
-            let { accountNumber , secondaryId  } = requestParams
+            let { pageNumber , pageSize, accountID  } = requestParams
             const currentYear = new Date().getFullYear()
             const date = new Date();
             const startOfYear = new Date(date.setUTCFullYear(currentYear,0,1));
             
             startOfYear.setUTCHours(0, 0 , 0);
+            const start = startOfYear.getTime()
+            const yearlyTransactions = await axios.get(`accounts/${accountID}/transactions`, {
+                params: {
+                    pageNumber: pageNumber,
+                    pageSize: pageSize,
+                    startingAfter:start,
+                    endingBefore: new Date().getTime()
+                }
+              });
+            console.log("After YEARLY TRANSACTIONS ",yearlyTransactions.data)
+            //while(response)
             // const { accountHolder, ...account} = {...accountDetails };
-            let where;
-            if(secondaryId){
+            // let where;
+            // if(secondaryId){
 
-                where ={
-                    senderAccountNumber: accountNumber,
-                    secondaryId:secondaryId,
-                    transactionStartedAt: { [Op.gte]: startOfYear, }
+            //     where ={
+            //         senderAccountNumber: accountNumber,
+            //         secondaryId:secondaryId,
+            //         transactionStartedAt: { [Op.gte]: startOfYear, }
 
-                }
+            //     }
 
-            }
-            else{
-                where = {
-                    senderAccountNumber: accountNumber,
-                    transactionStartedAt: { [Op.gte]: startOfYear, }
-                }
+            // }
+            // else{
+            //     where = {
+            //         senderAccountNumber: accountNumber,
+            //         transactionStartedAt: { [Op.gte]: startOfYear, }
+            //     }
 
-            }
+            // }
 
-            await DatabaseUtil.getDbConnection()
-            const yearlyTransactions = await Transaction.findAll({
-                where: where
-            })
-            console.log("Yearly ",yearlyTransactions);
+            // await DatabaseUtil.getDbConnection()
+            // const yearlyTransactions = await Transaction.findAll({
+            //     where: where
+            // })
+            // console.log("Yearly ",yearlyTransactions);
+
+            const yearlyTransactionsData = yearlyTransactions.data.accountTransactionList
             const Months = { "Jan" :0 , "Feb" : 0 ,"March" :0 , "Apr" : 0 ,"May":0,"Jun":0,"July":0,"Aug":0,"Sept":0,"Oct":0,"Nov":0,"Dec":0}
 
-            for(let transaction of yearlyTransactions){
-                const startedAt = transaction["transactionStartedAt"];
+            for(let transaction of yearlyTransactionsData){
+                const startedAt = new Date(transaction["timestamp"]);
+                console.log("Started ",startedAt);
                 const month = new Date(startedAt);
                 const getMonth = month.getMonth();
                 const amount = transaction["amount"];
@@ -97,7 +115,6 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
 
 
             }
-
             return Months
         } catch (error) {
             console.error(error)
@@ -109,21 +126,19 @@ module.exports.ExpenseTrackingService = class ExpenseTrackingService {
             
              const requestParams = event["queryStringParameters"];
              console.log('Recent Transaction  ', requestParams)
-             let { id  } = requestParams
-            const accountNumber = id;
+             let { accountID  } = requestParams
             // const { accountHolder, ...account} = {...accountDetails };
-            await DatabaseUtil.getDbConnection()
-            const recentTransactions = await Transaction.findAll({
-                where:{
+            const response = await axios.get(`accounts/${accountID}/transactions`, {
+                params: {
+                    pageNumber: 1,
+                    pageSize: 5,
                     
-                    senderAccountNumber: accountNumber,
-                },
-                limit: 5,
-                order: [
-                     ['transactionStartedAt', 'DESC']],
-            })
+                }
+              });
+              return response.data;
+            
 
-            return recentTransactions
+            
         } catch (error) {
             console.error(error)
             throw new Error(error)

@@ -78,6 +78,14 @@ module.exports.AccountHolderService= class AccountHolderService {
                 accountType: "PRIMARY_ACCOUNT_HOLDER"
             })
 
+            userInfo["username"] = responseFromCreateApplication?.data?.individualID
+            userInfo["role"] = 'primary-account-holder'
+
+            await AuthUtil.adminCreateUser(userInfo)
+            // await AuthUtil.disableCognitoUser(userDetails.username) 
+            await AuthUtil.addToGroup(userInfo.username, 'primary-account-holder')  
+
+
             return "SUCCESS"
         } catch (error) {
             console.error('error in createPrimaryAccountHolder ', error)

@@ -76,7 +76,6 @@ module.exports.secondaryUserService = class secondaryUserService {
     
                 console.log('accountNumber ',responseFromCreateBundle?.accounts?.[0]?.accountID, 
                 'applicationId :', responseFromCreateApplication?.data?.applicationID,
-                 'customerId: ', responseFromCreateApplication?.data?.individualID,
                   'accountType: ', "SECONDARY_ACCOUNT_HOLDER",
                   'accountHolderID: ', responseFromCreateApplication?.data?.individualID)
     
@@ -94,6 +93,13 @@ module.exports.secondaryUserService = class secondaryUserService {
                     relationship:  userInfo["relationship"],
                     isMinor: isMinor,
                 })
+
+                userInfo["username"] = responseFromCreateApplication?.data?.individualID
+                userInfo["role"] = 'secondary-account-holder'
+
+                await AuthUtil.adminCreateUser(userInfo)
+                // await AuthUtil.disableCognitoUser(userDetails.username) 
+                await AuthUtil.addToGroup(userInfo.username, 'secondary-account-holder')  
     
                 console.log('createSecondaryAccountHolder service end')
                 return "SUCCESS"
@@ -177,24 +183,18 @@ module.exports.secondaryUserService = class secondaryUserService {
     //         throw new Error(error)
     //     }
     // }
-    // static async deleteSecondaryAccountService(accountDetails) {
-    //     try {
-    //         console.log('secondary account details ')
-    //         // const { accountHolder, ...account} = {...accountDetails };
-    //         if (!accountDetails["secondaryId"]){
-    //             throw new Error("Required Params Not Present")
-    //         } 
-    //         await DatabaseUtil.getDbConnection()
-    //         const secondaryId = accountDetails["secondaryId"];
-    //         await SecondaryAccountHolder.update(
-    //             { isActive: !accountDetails["isActive"]},
-    //             { where: { secondaryId: secondaryId, } })
-    //         return "Deleted SUCCESS"
-    //     } catch (error) {
-    //         console.error(error)
-    //         throw new Error(error)
-    //     }
-    // }
+    static async deleteSecondaryAccountService(accountDetails) {
+        try {
+            console.log('secondary account details ')
+            // const { accountHolder, ...account} = {...accountDetails };
+            // await DatabaseUtil.getDbConnection()
+            
+            return "SUCCESS"
+        } catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
+    }
     // static async getSecondaryAccountService(accountDetails) {
     //     try {
     //         console.log('secondary account details ')
