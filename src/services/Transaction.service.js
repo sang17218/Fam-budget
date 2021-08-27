@@ -44,6 +44,7 @@ module.exports.TransactionService = class TransactionService{
                     },attributes:['balance']
                 })
 
+                console.log('balace getter - ', getBalanceForReciever, getBalanceForSender)
             if(getBalanceForSender && getBalanceForSender?.balance >= 0){
                 const sender = await Account.update({
                     balance: getBalanceForSender.balance - amount2},
@@ -59,7 +60,7 @@ module.exports.TransactionService = class TransactionService{
                     {where : {
                      accountNumber:transactionDetails["creditAccountID"],
                     }
-                }).then((res) => console.log("hi ", res))
+                }).then((res) => console.log("receiver balance - ", res))
     
             }
            
@@ -203,5 +204,15 @@ module.exports.TransactionService = class TransactionService{
             console.error(error)
             throw new Error(error)
         }
+    }
+
+    static async getAllUserTransactions(account){
+        let getAllSecondaryAccounts = []
+            
+        getAllSecondaryAccounts = await SecondaryAccountHolder.findAll({
+            where:{
+                primaryUserAccountNumber: accountDetails["primaryUserAccountNumber"]
+            },attributes: ['secondaryUserAccountNumber']
+        })
     }
 }
