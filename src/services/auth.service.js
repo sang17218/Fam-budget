@@ -71,7 +71,7 @@ module.exports.AuthService = class AuthService {
                         // console.log("response from db", accountNo)
                         resolve({ success: true,
                             accountNumber: accountNo.accountNumber,
-                            accessToken: accessToken ,
+                            accessToken: result.getAccessToken().getJwtToken(),
                             idToken: result.getIdToken().getJwtToken(),
                              })
                     },
